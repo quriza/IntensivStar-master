@@ -87,3 +87,8 @@ lint/tmp/
 # Android Profiling
 *.hprof
 keystore.properties
+.idea/inspectionProfiles/Project_Default.xml
+
+.idea/codeStyles/Project.xml
+
+.idea/.name
