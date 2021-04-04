@@ -1,11 +1,9 @@
 package ru.androidschool.intensiv.ui.tvshows
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
@@ -13,18 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import kotlinx.android.synthetic.main.feed_fragment.*
-import kotlinx.android.synthetic.main.feed_fragment.movies_recycler_view
 import kotlinx.android.synthetic.main.feed_header.*
 import kotlinx.android.synthetic.main.search_toolbar.view.*
 import kotlinx.android.synthetic.main.tv_shows_fragment.*
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.MockRepository
 import ru.androidschool.intensiv.data.Movie
-import ru.androidschool.intensiv.ui.afterTextChanged
 import ru.androidschool.intensiv.ui.feed.FeedFragment
-import ru.androidschool.intensiv.ui.feed.MainCardContainer
-import ru.androidschool.intensiv.ui.feed.MovieItem
-import timber.log.Timber
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -78,17 +71,10 @@ class TvShowsFragment : Fragment() {
                         openShowDetails(
                             movie
                         )
-
                     }
                 }.toList()
 
-
-
         shows_recycler_view.adapter = adapter.apply { addAll(showList) }
-
-
-
-
     }
 
     private fun openShowDetails(movie: Movie) {
@@ -96,9 +82,6 @@ class TvShowsFragment : Fragment() {
         bundle.putString(FeedFragment.KEY_TITLE, movie.title)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)
     }
-
-
-
 
     companion object {
         @JvmStatic
