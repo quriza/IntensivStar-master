@@ -5,8 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import kotlinx.android.synthetic.main.movie_details_fragment.*
 import ru.androidschool.intensiv.R
-
+import ru.androidschool.intensiv.data.MockRepository
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
@@ -31,6 +32,25 @@ class MovieDetailsFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.movie_details_fragment, container, false)
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val movieTitle = requireArguments().getString("title")
+        val movie = MockRepository.getTVShows().find { it.title == movieTitle }
+
+        if (movie!==null) {
+            title.text = movie?.title
+        } else {
+            title.text = "не найден видосик"
+        }
+     //   title.rating = movie?.rating
+
+
+
+    }
+
+
 
     companion object {
 

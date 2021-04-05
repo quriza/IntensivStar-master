@@ -7,7 +7,7 @@ object MockRepository {
         val moviesList = mutableListOf<Movie>()
         for (x in 0..10) {
             val movie = Movie(
-                title = "Spider-Man $x",
+                title = "Назад в будущее $x",
                 voteAverage = 10.0 - x
             )
             moviesList.add(movie)
@@ -21,7 +21,7 @@ object MockRepository {
         val moviesList = mutableListOf<Movie>()
         for (x in 0..10) {
             val movie = Movie(
-                title = "Game Of Trones - $x",
+                title = "Один дома - $x",
                 voteAverage = 10.0 - x
             )
             moviesList.add(movie)
