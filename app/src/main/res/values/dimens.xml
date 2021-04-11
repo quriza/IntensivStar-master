@@ -22,4 +22,13 @@
 
     <!-- TV Show Item -->
     <dimen name="caption_text_size">12sp</dimen>
+
+    <!-- movie Detail Screen -->
+    <!-- Movie Card Item -->
+    <dimen name="movie_detail_width">130dp</dimen>
+    <dimen name="movie_detail_height">170dp</dimen>
+    <dimen name="actor_small_photo_width">60dp</dimen>
+    <dimen name="actor_small_photo_height">60dp</dimen>
+    <dimen name="actor_card_height">120dp</dimen>
+
 </resources>

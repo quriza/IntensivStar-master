@@ -5,9 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.squareup.picasso.Picasso
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import kotlinx.android.synthetic.main.movie_details_fragment.*
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.MockRepository
+
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
@@ -15,7 +20,9 @@ class MovieDetailsFragment : Fragment() {
 
     private var param1: String? = null
     private var param2: String? = null
-
+    private val adapter by lazy {
+        GroupAdapter<GroupieViewHolder>()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -39,17 +46,34 @@ class MovieDetailsFragment : Fragment() {
         val movieTitle = requireArguments().getString("title")
         val movie = MockRepository.getTVShows().find { it.title == movieTitle }
 
-        if (movie!==null) {
-            title.text = movie?.title
+        actors_recycler_view.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL, false)
+
+        actors_recycler_view.adapter = adapter.apply { addAll(listOf()) }
+
+        if (movie !== null) {
+            title.text = movie?.title ?: ""
+            movie_details_rating.rating = movie.rating
+            movie_genre.text = movie?.genre ?: ""
+            movie_year.text = movie?.year ?: ""
+            movie_produced_by.text = movie?.producedBy ?: ""
+            movie_description.text = movie?.description
+            if (movie?.movieImage !== null) {
+                Picasso.get()
+                    .load(movie?.movieImage)
+                    .into(movie_image)
+            } else {
+                movie_image.visibility = View.GONE
+            }
+            val actorList =
+                movie?.actors.map {
+                    ActorItem(it)
+
+                }.toList()
+            actors_recycler_view.adapter = adapter.apply { addAll(actorList) }
         } else {
             title.text = "не найден видосик"
         }
-     //   title.rating = movie?.rating
-
-
-
     }
-
 
 
     companion object {
