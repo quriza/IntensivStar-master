@@ -11,30 +11,30 @@
     android:layout_marginBottom="@dimen/material_margin_normal"
     android:orientation="vertical"
     tools:background="@color/blueDark"
-    tools:ignore="RtlHardcoded">
+    tools:ignore="RtlHardcoded"
+    android:layout_gravity="center">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/actor_photo"
         android:layout_width="@dimen/actor_small_photo_width"
         android:layout_height="@dimen/actor_small_photo_height"
         android:scaleType="centerCrop"
-        android:layout_gravity="center"
+        android:layout_marginRight="@dimen/material_margin_normal"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
         tools:background="@color/blueDark"
         tools:src="@drawable/ic_avatar" />
 
     <TextView
         android:id="@+id/actor_name"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/actor_small_photo_width"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/material_margin_super_small"
+        android:textAlignment="center"
+        android:layout_marginTop="@dimen/material_margin_normal"
 
         android:maxLines="2"
-        android:textColor="@color/white"
-        android:textSize="10sp"
+        style="@style/GrayText"
         tools:text="Алиса Селезнева"
-        tools:textColor="@color/white" />
+        />
 
 
 </LinearLayout>
