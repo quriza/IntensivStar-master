@@ -23,6 +23,7 @@ class MovieDetailsFragment : Fragment() {
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -46,8 +47,8 @@ class MovieDetailsFragment : Fragment() {
         val movieTitle = requireArguments().getString("title")
         val movie = MockRepository.getTVShows().find { it.title == movieTitle }
 
-        actors_recycler_view.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL, false)
-
+        actors_recycler_view.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         actors_recycler_view.adapter = adapter.apply { addAll(listOf()) }
 
         if (movie !== null) {
@@ -67,11 +68,11 @@ class MovieDetailsFragment : Fragment() {
             val actorList =
                 movie?.actors.map {
                     ActorItem(it)
-
                 }.toList()
             actors_recycler_view.adapter = adapter.apply { addAll(actorList) }
         } else {
             title.text = "не найден видосик"
+            //Михаил а как принято отрабатывать такую ситуацию?
         }
     }
 

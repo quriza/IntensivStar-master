@@ -22,14 +22,14 @@
             tools:src="@drawable/ic_avatar" />
 
         <RelativeLayout
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/blueDark"
             android:orientation="horizontal"
             android:paddingLeft="20dp"
             android:paddingTop="40dp"
-            android:paddingRight="10dp">
+            android:paddingRight="10dp"
+            tools:ignore="RtlHardcoded">
 
             <TextView
                 android:id="@+id/title"
@@ -37,21 +37,21 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_gravity="top"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="@dimen/material_margin_normal"
                 android:gravity="left"
-                android:textColor="@color/white"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                tools:text="Aquaman" />
+                style="@style/Header"
+                tools:text="Aquaman"
+                tools:ignore="RtlHardcoded"/>
 
             <Button
+                tools:ignore="RtlHardcoded"
                 android:id="@+id/start_button"
                 style="@style/GrayButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
                 android:layout_alignParentLeft="true"
-                android:text="смотреть" />
+                android:text="@string/movie_watch" />
 
             <androidx.appcompat.widget.AppCompatRatingBar
                 android:id="@+id/movie_details_rating"
@@ -64,9 +64,11 @@
                 android:numStars="5"
                 android:progressBackgroundTint="@color/colorControlNormal"
                 android:stepSize="0.5"
-                tools:rating="5" />
+                tools:rating="5"
+                tools:ignore="RtlHardcoded"/>
 
             <TextView
+
                 android:id="@+id/movie_description"
                 style="@style/GrayText"
                 android:layout_width="match_parent"
@@ -74,30 +76,28 @@
                 android:layout_below="@id/start_button"
                 android:layout_alignParentLeft="true"
                 android:layout_gravity="top"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:gravity="left"
+                android:layout_marginTop="@dimen/material_margin_normal"
+                android:layout_marginBottom="@dimen/material_margin_normal"
+                android:gravity="start"
+                tools:ignore="RtlHardcoded"
                 tools:text="это текст про булки которые надо поесть.это текст про булки которые надо поесть. это текст про булки которые надо поесть. это текст про булки которые надо поесть. это текст про булки которые надо поесть. это текст про булки которые надо поесть.  " />
         </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout1"
             android:layout_width="match_parent"
-
             android:layout_height="wrap_content"
-            android:layout_below="@id/movie_description"
             android:orientation="horizontal">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/actors_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="@dimen/material_margin_normal"
                 android:layout_marginTop="@dimen/material_margin_normal"
-                android:layout_marginEnd="12dp"
+                android:layout_marginEnd="@dimen/material_margin_normal"
                 android:orientation="horizontal"
                 android:scrollbars="horizontal"
-
                 android:visibility="visible"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:ignore="RtlSymmetry"
@@ -105,68 +105,63 @@
                 tools:listitem="@layout/actor_view" />
         </LinearLayout>
 
-        <TableLayout
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:id="@+id/tableLayout1"
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/linearLayout1"
-            android:shrinkColumns="*"
-            android:stretchColumns="*">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/material_margin_normal"
+            android:layout_marginRight="@dimen/material_margin_normal">
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
+                <TextView android:layout_alignParentTop="true"
                     android:id="@+id/movie_produced_by_caption"
                     style="@style/WhiteCaption"
-                    android:layout_weight="3"
-                    android:text="Студия" />
+                    android:text="@string/movie_produced_by"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content" />
 
                 <TextView
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@id/movie_produced_by_caption"
                     android:id="@+id/movie_produced_by"
                     style="@style/GrayText"
-                    android:layout_weight="1"
-                    android:text="Miramax" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Miramax" />
 
                 <TextView
                     android:id="@+id/movie_genre_caption"
+                    android:layout_below="@id/movie_produced_by_caption"
                     style="@style/WhiteCaption"
-                    android:layout_weight="3"
-                    android:text="Жанр" />
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/movie_genre" />
 
                 <TextView
                     android:id="@+id/movie_genre"
+                    android:layout_below="@id/movie_produced_by_caption"
+                    android:layout_toEndOf="@id/movie_genre_caption"
                     style="@style/GrayText"
-                    android:layout_weight="1"
-                    android:text="Детектив" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Детектив" />
 
                 <TextView
                     android:id="@+id/movie_year_caption"
+                    android:layout_below="@id/movie_genre_caption"
                     style="@style/WhiteCaption"
-                    android:layout_weight="3"
-                    android:text="Год" />
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/movie_year" />
 
                 <TextView
                     android:id="@+id/movie_year"
+                    android:layout_below="@id/movie_genre_caption"
+                    android:layout_toEndOf="@id/movie_year_caption"
                     style="@style/GrayText"
-                    android:layout_weight="1"
-                    android:text="Детектив" />
-            </TableRow>
-        </TableLayout>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="2021" />
+        </RelativeLayout>
     </LinearLayout>
-
 
 </androidx.core.widget.NestedScrollView>
