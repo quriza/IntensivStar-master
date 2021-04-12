@@ -10,7 +10,6 @@ object MockRepository {
         actorsList.add(Actor("Stainberg Kamber", ""))
         actorsList.add(Actor("Yet another actor", ""))
 
-
         val moviesList = mutableListOf<Movie>()
         for (x in 0..10) {
             val movie = Movie(
@@ -22,7 +21,6 @@ object MockRepository {
                 producedBy = "MiraMax",
                 year = (2000 + x).toString(),
                 description = "текст про булки которые надо съесть в больших количествах, текст про булки которые надо съесть в больших количествах, текст про булки которые надо съесть в больших количествах,"
-
 
                 )
             moviesList.add(movie)

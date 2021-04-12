@@ -72,10 +72,9 @@ class MovieDetailsFragment : Fragment() {
             actors_recycler_view.adapter = adapter.apply { addAll(actorList) }
         } else {
             title.text = "не найден видосик"
-            //Михаил а как принято отрабатывать такую ситуацию?
+            // Михаил а как принято отрабатывать такую ситуацию?
         }
     }
-
 
     companion object {
 

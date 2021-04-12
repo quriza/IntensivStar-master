@@ -7,7 +7,6 @@ import kotlinx.android.synthetic.main.actor_view.*
 import kotlinx.android.synthetic.main.item_with_text.*
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.Actor
-import ru.androidschool.intensiv.data.Movie
 
 class ActorItem(
     private val content: Actor
