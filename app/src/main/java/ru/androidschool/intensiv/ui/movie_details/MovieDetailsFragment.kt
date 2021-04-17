@@ -6,12 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.squareup.picasso.Picasso
+
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import kotlinx.android.synthetic.main.movie_details_fragment.*
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.MockRepository
+import ru.androidschool.intensiv.ui.load
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -58,13 +59,8 @@ class MovieDetailsFragment : Fragment() {
             movie_year.text = movie?.year ?: ""
             movie_produced_by.text = movie?.producedBy ?: ""
             movie_description.text = movie?.description
-            if (movie?.movieImage !== null) {
-                Picasso.get()
-                    .load(movie?.movieImage)
-                    .into(movie_image)
-            } else {
-                movie_image.visibility = View.GONE
-            }
+            movie_image.load(movie?.movieImage)
+
             val actorList =
                 movie?.actors.map {
                     ActorItem(it)
