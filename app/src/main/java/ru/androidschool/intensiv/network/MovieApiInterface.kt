@@ -59,8 +59,6 @@ interface MovieApiInterface {
         @Query("language") language: String
     ): Call<MovieResponse>
 
-
-
     @GET("tv/{tvId}/credits")
     fun getTVCredits(
         @Path("tvId") movieId: String,

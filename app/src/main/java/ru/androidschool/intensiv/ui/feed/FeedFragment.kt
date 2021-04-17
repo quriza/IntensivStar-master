@@ -21,7 +21,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.MockRepository
 import ru.androidschool.intensiv.data.Movie
 import ru.androidschool.intensiv.data.MovieResponse
 import ru.androidschool.intensiv.network.MovieApiClient
@@ -67,18 +66,16 @@ class FeedFragment : Fragment() {
         }
 
         val getNowPlayingMovies =
-            MovieApiClient.apiClient.getNowPlayingMovies(BuildConfig.API_KEY, "ru",2)
-        this.addResponseHandlers(getNowPlayingMovies,R.string.now_playing);
+            MovieApiClient.apiClient.getNowPlayingMovies(BuildConfig.API_KEY, "ru", 2)
+        this.addResponseHandlers(getNowPlayingMovies, R.string.now_playing)
 
         val getUpcomingMovies =
             MovieApiClient.apiClient.getUpcomingMovies(BuildConfig.API_KEY, "ru")
 
-        this.addResponseHandlers(getUpcomingMovies,R.string.upcoming);
-
+        this.addResponseHandlers(getUpcomingMovies, R.string.upcoming)
     }
 
-
-    private fun addResponseHandlers(getMoviesCall: Call<MovieResponse>,strRes: Int) {
+    private fun addResponseHandlers(getMoviesCall: Call<MovieResponse>, strRes: Int) {
         getMoviesCall.enqueue(object : Callback<MovieResponse> {
             override fun onFailure(call: Call<MovieResponse>, e: Throwable) {
                 Log.e(getString(strRes), e.toString())
@@ -86,8 +83,7 @@ class FeedFragment : Fragment() {
 
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
                 val movies = response.body()?.results ?: listOf()
-                AddMoviesToFeed(strRes, movies);
-
+                AddMoviesToFeed(strRes, movies)
             }
         })
     }
@@ -111,7 +107,7 @@ class FeedFragment : Fragment() {
 
     private fun openMovieDetails(movie: Movie) {
         val bundle = Bundle()
-        bundle.putInt(KEY_ID, movie.id?:0)
+        bundle.putInt(KEY_ID, movie.id ?: 0)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)
     }
 

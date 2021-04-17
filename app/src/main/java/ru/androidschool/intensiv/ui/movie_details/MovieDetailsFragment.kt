@@ -52,7 +52,6 @@ class MovieDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         val movieId = requireArguments().getInt(FeedFragment.KEY_ID)
         val getMovieDetails = if (requireArguments().getString(FeedFragment.KEY_TYPE) == "TV_SHOW") {
 
@@ -84,15 +83,12 @@ class MovieDetailsFragment : Fragment() {
 
                     movie_genre.text =
                         movie?.genres?.map({ it -> it.name })?.joinToString(", ") ?: ""
-                    movie_year.text = movie?.release_date?.substring(0,4) ?: ""
+                    movie_year.text = movie?.release_date?.substring(0, 4) ?: ""
                     movie_produced_by.text =
                         movie?.productionCompanies?.map({ it -> it.name })?.joinToString(", ") ?: ""
                     movie_description.text = movie?.overview
                     movie_image.load(movie?.posterPath)
-
                 }
-
-
             }
         })
 
@@ -113,7 +109,7 @@ class MovieDetailsFragment : Fragment() {
             ) {
                 val actors = response.body()?.actors
                 if (actors === null) {
-                    return;
+                    return
                 }
                 val actorList =
                     actors.map {
@@ -122,11 +118,8 @@ class MovieDetailsFragment : Fragment() {
                 actors_recycler_view.adapter = adapter.apply {
                     addAll(actorList)
                 }
-
-
             }
         })
-
 
 // getMovieDetails
 /*  val movie = MockRepository.getTVShows().find { it.title == movieTitle }

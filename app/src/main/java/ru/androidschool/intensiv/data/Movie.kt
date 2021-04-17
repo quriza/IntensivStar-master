@@ -15,7 +15,7 @@ data class Movie(
     val originalTitle: String?,
     @SerializedName("original_language")
     val originalLanguage: String?,
-    @SerializedName(value="title",alternate=["name"])
+    @SerializedName(value = "title", alternate = ["name"])
     var title: String?,
     @SerializedName("backdrop_path")
     val backdropPath: String?,
@@ -42,8 +42,3 @@ data class Movie(
     val rating: Float
         get() = (voteAverage ?: 0.0).div(2).toFloat()
 }
-
-
-
-
-

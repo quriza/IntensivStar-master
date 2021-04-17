@@ -23,6 +23,5 @@ class MovieItem(
         }
 
         viewHolder.image_preview.load(content.posterPath)
-
     }
 }
