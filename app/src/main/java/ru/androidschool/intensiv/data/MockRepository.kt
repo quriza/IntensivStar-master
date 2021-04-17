@@ -1,5 +1,12 @@
 package ru.androidschool.intensiv.data
 
+import android.util.Log
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import ru.androidschool.intensiv.BuildConfig
+import ru.androidschool.intensiv.network.MovieApiClient
+
 object MockRepository {
 
     fun getMovies(): List<Movie> {
@@ -11,6 +18,7 @@ object MockRepository {
         actorsList.add(Actor("Yet another actor", ""))
 
         val moviesList = mutableListOf<Movie>()
+        /*
         for (x in 0..10) {
             val movie = Movie(
                 title = "Назад в будущее $x",
@@ -24,10 +32,14 @@ object MockRepository {
 
                 )
             moviesList.add(movie)
-        }
+
+
+        }*/
 
         return moviesList
     }
+
+
 
     fun getTVShows(): List<Movie> {
         var actorsList = mutableListOf<Actor>()
@@ -37,7 +49,7 @@ object MockRepository {
         actorsList.add(Actor("Yet another actor", ""))
 
         val moviesList = mutableListOf<Movie>()
-        for (x in 0..10) {
+        /*for (x in 0..10) {
             val movie = Movie(
                 title = "Один дома - $x",
                 movieImage = "https://www.kinopoisk.ru/images/film_big/1143242.jpg",
@@ -49,7 +61,7 @@ object MockRepository {
                 year = (2000 + x).toString()
             )
             moviesList.add(movie)
-        }
+        }*/
 
         return moviesList
     }

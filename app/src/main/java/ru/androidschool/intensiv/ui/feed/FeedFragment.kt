@@ -1,6 +1,7 @@
 package ru.androidschool.intensiv.ui.feed
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -15,9 +16,15 @@ import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import kotlinx.android.synthetic.main.feed_fragment.*
 import kotlinx.android.synthetic.main.feed_header.*
 import kotlinx.android.synthetic.main.search_toolbar.view.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.MockRepository
 import ru.androidschool.intensiv.data.Movie
+import ru.androidschool.intensiv.data.MovieResponse
+import ru.androidschool.intensiv.network.MovieApiClient
 import ru.androidschool.intensiv.ui.afterTextChanged
 import timber.log.Timber
 
@@ -59,11 +66,45 @@ class FeedFragment : Fragment() {
             }
         }
 
-        // Используя Мок-репозиторий получаем фэйковый список фильмов
+
+        val getNowPlayingMovies =
+            MovieApiClient.apiClient.getNowPlayingMovies(BuildConfig.API_KEY, "ru",3)
+
+        getNowPlayingMovies.enqueue(object : Callback<MovieResponse> {
+            override fun onFailure(call: Call<MovieResponse>, e: Throwable) {
+                Log.e("getNowPlaying", e.toString())
+            }
+
+            override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
+                val movies = response.body()?.results ?: listOf()
+                AddMoviesToFeed(R.string.now_playing, movies);
+
+            }
+        })
+
+        val getUpcomingMovies =
+            MovieApiClient.apiClient.getUpcomingMovies(BuildConfig.API_KEY, "ru")
+
+        getUpcomingMovies.enqueue(object : Callback<MovieResponse> {
+            override fun onFailure(call: Call<MovieResponse>, e: Throwable) {
+                Log.e("getUpcoming", e.toString())
+            }
+
+            override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
+                val movies = response.body()?.results ?: listOf()
+                AddMoviesToFeed(R.string.upcoming, movies);
+
+            }
+        })
+
+
+    }
+
+    private fun AddMoviesToFeed(titleRes: Int, movies: List<Movie>) {
         val moviesList = listOf(
             MainCardContainer(
-                R.string.recommended,
-                MockRepository.getMovies().map {
+                titleRes,
+                movies.map {
                     MovieItem(it) { movie ->
                         openMovieDetails(
                             movie
@@ -72,23 +113,7 @@ class FeedFragment : Fragment() {
                 }.toList()
             )
         )
-
         movies_recycler_view.adapter = adapter.apply { addAll(moviesList) }
-
-        // Используя Мок-репозиторий получаем фэйковый список фильмов
-        // Чтобы отобразить второй ряд фильмов
-        val newMoviesList = listOf(
-            MainCardContainer(
-                R.string.upcoming,
-                MockRepository.getMovies().map {
-                    MovieItem(it) { movie ->
-                        openMovieDetails(movie)
-                    }
-                }.toList()
-            )
-        )
-
-        adapter.apply { addAll(newMoviesList) }
     }
 
     private fun openMovieDetails(movie: Movie) {

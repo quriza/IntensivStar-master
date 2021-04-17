@@ -55,7 +55,7 @@ class MovieDetailsFragment : Fragment() {
         if (movie !== null) {
             title.text = movie?.title ?: ""
             movie_details_rating.rating = movie.rating
-            movie_genre.text = movie?.genre ?: ""
+         /*   movie_genre.text = movie?.genre ?: ""
             movie_year.text = movie?.year ?: ""
             movie_produced_by.text = movie?.producedBy ?: ""
             movie_description.text = movie?.description
@@ -65,7 +65,7 @@ class MovieDetailsFragment : Fragment() {
                 movie?.actors.map {
                     ActorItem(it)
                 }.toList()
-            actors_recycler_view.adapter = adapter.apply { addAll(actorList) }
+            actors_recycler_view.adapter = adapter.apply { addAll(actorList) }*/
         } else {
             title.text = "не найден видосик"
             // Михаил а как принято отрабатывать такую ситуацию?

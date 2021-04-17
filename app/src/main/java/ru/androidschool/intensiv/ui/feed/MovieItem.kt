@@ -22,10 +22,7 @@ class MovieItem(
             onClick.invoke(content)
         }
 
-        // TODO Получать из модели
+        viewHolder.image_preview.load(content.posterPath)
 
-        viewHolder.image_preview.load("https://m.media-amazon.com/images/M/MV5BYTk3MDljOWQtNGI2My00OTEzLTlhYjQtOTQ4ODM2MzUwY2IwXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_.jpg")
-          //  .load()
-        //    .into(viewHolder.image_preview)
     }
 }
