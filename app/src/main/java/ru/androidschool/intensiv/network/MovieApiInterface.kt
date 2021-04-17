@@ -2,23 +2,49 @@ package ru.androidschool.intensiv.network
 
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
+import ru.androidschool.intensiv.data.CreditsResponse
+import ru.androidschool.intensiv.data.Movie
 import ru.androidschool.intensiv.data.MovieResponse
 
 interface MovieApiInterface {
 
     @GET("movie/now_playing")
-    fun getNowPlayingMovies(@Query("api_key") apiKey: String, @Query("language") language: String,@Query("page") page: Int): Call<MovieResponse>
+    fun getNowPlayingMovies(
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String,
+        @Query("page") page: Int
+    ): Call<MovieResponse>
 
     @GET("movie/upcoming")
-    fun getUpcomingMovies(@Query("api_key") apiKey: String, @Query("language") language: String): Call<MovieResponse>
+    fun getUpcomingMovies(
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): Call<MovieResponse>
 
     @GET("movie/popular")
-    fun getPopularMovies(@Query("api_key") apiKey: String, @Query("language") language: String): Call<MovieResponse>
+    fun getPopularMovies(
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): Call<MovieResponse>
+
+    @GET("movie/{movieId}")
+    fun getMovieDetails(
+        @Path("movieId") movieId: String,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+
+    ): Call<Movie>
 
 
-    // Получение новинок Upcoming https://developers.themoviedb.org/3/movies/get-upcoming
-    //Получение популярных фильмов Popular(https://developers.themoviedb.org/3/movies/get-popular-movies)
- //   @GET("search/movie")
- //   fun searchByQuery(@Query("api_key") apiKey: String, @Query("language") language: String, @Query("query") query: String): Single<MovieList>
+
+    @GET("movie/{movieId}/credits")
+    fun getMovieCredits(
+        @Path("movieId") movieId: String,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+
+    ): Call<CreditsResponse>
+
 }

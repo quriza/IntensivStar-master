@@ -17,14 +17,14 @@ object MovieApiClient {
         })
         .build()
 
+
+
     val apiClient: MovieApiInterface by lazy {
         val retrofit = Retrofit.Builder()
             .client(client)
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-
-
         return@lazy retrofit.create((MovieApiInterface::class.java))
     }
 }

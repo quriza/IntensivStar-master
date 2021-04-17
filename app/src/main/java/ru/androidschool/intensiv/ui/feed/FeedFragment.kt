@@ -118,7 +118,7 @@ class FeedFragment : Fragment() {
 
     private fun openMovieDetails(movie: Movie) {
         val bundle = Bundle()
-        bundle.putString(KEY_TITLE, movie.title)
+        bundle.putInt(KEY_ID, movie.id?:0)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)
     }
 
@@ -141,5 +141,6 @@ class FeedFragment : Fragment() {
         const val MIN_LENGTH = 3
         const val KEY_TITLE = "title"
         const val KEY_SEARCH = "search"
+        const val KEY_ID = "id"
     }
 }

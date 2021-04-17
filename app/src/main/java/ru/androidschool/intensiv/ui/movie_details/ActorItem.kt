@@ -17,6 +17,6 @@ class ActorItem(
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.actor_name.text = content.name?.toUpperCase()
 
-        viewHolder.actor_photo.load("https://www.kinopoisk.ru/images/film_big/1143242.jpg")
+        viewHolder.actor_photo.load(content.profilePath)
     }
 }

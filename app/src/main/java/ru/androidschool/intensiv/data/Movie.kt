@@ -7,9 +7,8 @@ data class Movie(
     val isAdult: Boolean,
     @SerializedName("overview")
     val overview: String?,
-    @SerializedName("release_date")
-    val releaseDate: String?,
-    val genreIds: List<Int>,
+
+    //   val genreIds: List<Int>,
     @SerializedName("id")
     val id: Int?,
     @SerializedName("original_title")
@@ -24,17 +23,24 @@ data class Movie(
     val popularity: Double?,
     @SerializedName("vote_count")
     val voteCount: Int?,
+    @SerializedName("release_date")
+    val release_date: String?,
     @SerializedName("video")
     val video: Boolean?,
     @SerializedName("vote_average")
-    val voteAverage: Double?
+    val voteAverage: Double?,
+    @SerializedName("production_companies")
+    var productionCompanies: List<ProductionCompany>?,
+    @SerializedName("genres")
+    var genres: List<Genre>?
+
 ) {
     @SerializedName("poster_path")
     var posterPath: String? = null
         get() = "https://image.tmdb.org/t/p/w500$field"
 
     val rating: Float
-        get() = (voteAverage?:0.0).div(2).toFloat()
+        get() = (voteAverage ?: 0.0).div(2).toFloat()
 }
 
 
