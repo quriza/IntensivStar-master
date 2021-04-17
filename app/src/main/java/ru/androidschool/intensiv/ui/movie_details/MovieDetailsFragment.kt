@@ -54,7 +54,7 @@ class MovieDetailsFragment : Fragment() {
 
 
         val movieId = requireArguments().getInt(FeedFragment.KEY_ID)
-        var getMovieDetails = if (requireArguments().getString(FeedFragment.KEY_TYPE) == "TV_SHOW") {
+        val getMovieDetails = if (requireArguments().getString(FeedFragment.KEY_TYPE) == "TV_SHOW") {
 
                 MovieApiClient.apiClient.getTVShowDetails(
                     movieId.toString(),
@@ -84,7 +84,7 @@ class MovieDetailsFragment : Fragment() {
 
                     movie_genre.text =
                         movie?.genres?.map({ it -> it.name })?.joinToString(", ") ?: ""
-                    movie_year.text = movie?.release_date ?: ""
+                    movie_year.text = movie?.release_date?.substring(0,4) ?: ""
                     movie_produced_by.text =
                         movie?.productionCompanies?.map({ it -> it.name })?.joinToString(", ") ?: ""
                     movie_description.text = movie?.overview

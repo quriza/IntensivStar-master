@@ -57,7 +57,7 @@ class FeedFragment : Fragment() {
 
         // Добавляем recyclerView
         movies_recycler_view.layoutManager = LinearLayoutManager(context)
-        movies_recycler_view.adapter = adapter.apply { addAll(listOf()) }
+        movies_recycler_view.adapter = adapter.apply { clear() }
 
         search_toolbar.search_edit_text.afterTextChanged {
             Timber.d(it.toString())
@@ -66,38 +66,30 @@ class FeedFragment : Fragment() {
             }
         }
 
-
         val getNowPlayingMovies =
-            MovieApiClient.apiClient.getNowPlayingMovies(BuildConfig.API_KEY, "ru",3)
-
-        getNowPlayingMovies.enqueue(object : Callback<MovieResponse> {
-            override fun onFailure(call: Call<MovieResponse>, e: Throwable) {
-                Log.e("getNowPlaying", e.toString())
-            }
-
-            override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
-                val movies = response.body()?.results ?: listOf()
-                AddMoviesToFeed(R.string.now_playing, movies);
-
-            }
-        })
+            MovieApiClient.apiClient.getNowPlayingMovies(BuildConfig.API_KEY, "ru",2)
+        this.addResponseHandlers(getNowPlayingMovies,R.string.now_playing);
 
         val getUpcomingMovies =
             MovieApiClient.apiClient.getUpcomingMovies(BuildConfig.API_KEY, "ru")
 
-        getUpcomingMovies.enqueue(object : Callback<MovieResponse> {
+        this.addResponseHandlers(getUpcomingMovies,R.string.upcoming);
+
+    }
+
+
+    private fun addResponseHandlers(getMoviesCall: Call<MovieResponse>,strRes: Int) {
+        getMoviesCall.enqueue(object : Callback<MovieResponse> {
             override fun onFailure(call: Call<MovieResponse>, e: Throwable) {
-                Log.e("getUpcoming", e.toString())
+                Log.e(getString(strRes), e.toString())
             }
 
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
                 val movies = response.body()?.results ?: listOf()
-                AddMoviesToFeed(R.string.upcoming, movies);
+                AddMoviesToFeed(strRes, movies);
 
             }
         })
-
-
     }
 
     private fun AddMoviesToFeed(titleRes: Int, movies: List<Movie>) {
@@ -113,6 +105,7 @@ class FeedFragment : Fragment() {
                 }.toList()
             )
         )
+
         movies_recycler_view.adapter = adapter.apply { addAll(moviesList) }
     }
 
@@ -139,7 +132,6 @@ class FeedFragment : Fragment() {
 
     companion object {
         const val MIN_LENGTH = 3
-        const val KEY_TITLE = "title"
         const val KEY_SEARCH = "search"
         const val KEY_ID = "id"
         const val KEY_TYPE = "type"

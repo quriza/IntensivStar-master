@@ -109,14 +109,14 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/material_margin_normal"
+            android:layout_marginLeft="@dimen/material_margin_large"
             android:layout_marginRight="@dimen/material_margin_normal">
 
                 <TextView android:layout_alignParentTop="true"
                     android:id="@+id/movie_produced_by_caption"
                     style="@style/WhiteCaption"
                     android:text="@string/movie_produced_by"
-                    android:layout_width="100dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content" />
 
                 <TextView
@@ -130,15 +130,16 @@
 
                 <TextView
                     android:id="@+id/movie_genre_caption"
-                    android:layout_below="@id/movie_produced_by_caption"
+                    android:layout_below="@id/movie_produced_by"
+
                     style="@style/WhiteCaption"
-                    android:layout_width="100dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:text="@string/movie_genre" />
 
                 <TextView
                     android:id="@+id/movie_genre"
-                    android:layout_below="@id/movie_produced_by_caption"
+                    android:layout_below="@id/movie_produced_by"
                     android:layout_toEndOf="@id/movie_genre_caption"
                     style="@style/GrayText"
                     android:layout_width="wrap_content"
@@ -149,7 +150,7 @@
                     android:id="@+id/movie_year_caption"
                     android:layout_below="@id/movie_genre_caption"
                     style="@style/WhiteCaption"
-                    android:layout_width="100dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:text="@string/movie_year" />
 
