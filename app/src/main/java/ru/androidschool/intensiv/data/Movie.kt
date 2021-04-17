@@ -15,7 +15,7 @@ data class Movie(
     val originalTitle: String?,
     @SerializedName("original_language")
     val originalLanguage: String?,
-    @SerializedName("title")
+    @SerializedName(value="title",alternate=["name"])
     var title: String?,
     @SerializedName("backdrop_path")
     val backdropPath: String?,

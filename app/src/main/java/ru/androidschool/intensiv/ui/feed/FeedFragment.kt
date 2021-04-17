@@ -142,5 +142,6 @@ class FeedFragment : Fragment() {
         const val KEY_TITLE = "title"
         const val KEY_SEARCH = "search"
         const val KEY_ID = "id"
+        const val KEY_TYPE = "type"
     }
 }

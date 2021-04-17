@@ -1,6 +1,7 @@
 package ru.androidschool.intensiv.ui.tvshows
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +15,15 @@ import kotlinx.android.synthetic.main.feed_fragment.*
 import kotlinx.android.synthetic.main.feed_header.*
 import kotlinx.android.synthetic.main.search_toolbar.view.*
 import kotlinx.android.synthetic.main.tv_shows_fragment.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.MockRepository
 import ru.androidschool.intensiv.data.Movie
+import ru.androidschool.intensiv.data.MovieResponse
+import ru.androidschool.intensiv.network.MovieApiClient
 import ru.androidschool.intensiv.ui.feed.FeedFragment
 
 private const val ARG_PARAM1 = "param1"
@@ -64,22 +71,41 @@ class TvShowsFragment : Fragment() {
         shows_recycler_view.layoutManager = LinearLayoutManager(context)
         shows_recycler_view.adapter = adapter.apply { addAll(listOf()) }
 
-        // Используя Мок-репозиторий получаем фэйковый список сериальчиков
-        val showList =
-                MockRepository.getTVShows().map {
-                    TvShowItem(it) { movie ->
-                        openShowDetails(
-                            movie
-                        )
-                    }
-                }.toList()
 
-        shows_recycler_view.adapter = adapter.apply { addAll(showList) }
+
+
+        val getTVPopular =
+            MovieApiClient.apiClient.getTVPopular(BuildConfig.API_KEY, "ru")
+
+        getTVPopular.enqueue(object : Callback<MovieResponse> {
+            override fun onFailure(call: Call<MovieResponse>, e: Throwable) {
+                Log.e("getTVPopular", e.toString())
+            }
+
+            override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
+                val movies = response.body()?.results ?: listOf()
+
+                val showList =
+                    movies.map {
+                        TvShowItem(it) { movie ->
+                            openShowDetails(
+                                movie
+                            )
+                        }
+                    }.toList()
+                shows_recycler_view.adapter = adapter.apply { addAll(showList) }
+                    //AddMoviesToFeed(R.string.upcoming, movies);
+
+            }
+        })
+
+
     }
 
     private fun openShowDetails(movie: Movie) {
         val bundle = Bundle()
-        bundle.putString(FeedFragment.KEY_TITLE, movie.title)
+        bundle.putInt(FeedFragment.KEY_ID, movie.id?:0)
+        bundle.putString(FeedFragment.KEY_TYPE, "TV_SHOW")
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)
     }
 

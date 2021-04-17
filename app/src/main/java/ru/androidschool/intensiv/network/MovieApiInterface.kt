@@ -37,7 +37,13 @@ interface MovieApiInterface {
 
     ): Call<Movie>
 
+    @GET("tv/{tvId}")
+    fun getTVShowDetails(
+        @Path("tvId") movieId: String,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
 
+    ): Call<Movie>
 
     @GET("movie/{movieId}/credits")
     fun getMovieCredits(
@@ -47,4 +53,19 @@ interface MovieApiInterface {
 
     ): Call<CreditsResponse>
 
+    @GET("tv/popular")
+    fun getTVPopular(
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): Call<MovieResponse>
+
+
+
+    @GET("tv/{tvId}/credits")
+    fun getTVCredits(
+        @Path("tvId") movieId: String,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+
+    ): Call<CreditsResponse>
 }
