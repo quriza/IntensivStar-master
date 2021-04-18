@@ -19,13 +19,9 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.feed_fragment.*
 import kotlinx.android.synthetic.main.feed_header.*
 import kotlinx.android.synthetic.main.search_toolbar.view.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.Movie
-import ru.androidschool.intensiv.data.MovieResponse
 import ru.androidschool.intensiv.network.MovieApiClient
 import ru.androidschool.intensiv.ui.afterTextChanged
 import timber.log.Timber
@@ -73,7 +69,6 @@ class FeedFragment : Fragment() {
             }
         }
 
-
         compositeDisposable.add(
             MovieApiClient.apiClient.getNowPlayingMovies(
                 BuildConfig.API_KEY, "ru", 2
@@ -83,7 +78,6 @@ class FeedFragment : Fragment() {
                 .subscribe(
                     {
                         AddMoviesToFeed(R.string.now_playing, it?.results ?: listOf())
-
                     },
                     {
                         reportError(it)
@@ -99,23 +93,16 @@ class FeedFragment : Fragment() {
                 .subscribe(
                     {
                         AddMoviesToFeed(R.string.upcoming, it?.results ?: listOf())
-
                     },
                     {
                         reportError(it)
                     }
                 ))
-
-
-
-
     }
 
     private fun reportError(err: Throwable) {
         Log.d("Error occured", err.message ?: "")
     }
-
-
 
     private fun AddMoviesToFeed(titleRes: Int, movies: List<Movie>) {
         val moviesList = listOf(

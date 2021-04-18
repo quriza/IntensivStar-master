@@ -1,7 +1,6 @@
 package ru.androidschool.intensiv.ui.tvshows
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,13 +17,9 @@ import kotlinx.android.synthetic.main.feed_fragment.*
 import kotlinx.android.synthetic.main.feed_header.*
 import kotlinx.android.synthetic.main.search_toolbar.view.*
 import kotlinx.android.synthetic.main.tv_shows_fragment.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.Movie
-import ru.androidschool.intensiv.data.MovieResponse
 import ru.androidschool.intensiv.network.MovieApiClient
 import ru.androidschool.intensiv.ui.feed.FeedFragment
 
@@ -75,8 +70,6 @@ class TvShowsFragment : Fragment() {
         shows_recycler_view.layoutManager = LinearLayoutManager(context)
         shows_recycler_view.adapter = adapter.apply { addAll(listOf()) }
 
-
-
         compositeDisposable.add(
             MovieApiClient.apiClient.getTVPopular(
                 BuildConfig.API_KEY, "ru"
@@ -85,16 +78,13 @@ class TvShowsFragment : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
-                        addShowsToList (it?.results ?: listOf())
-
+                        addShowsToList(it?.results ?: listOf())
                     },
                     {
-                        // Михаил а вот три одинаковых обработки ошибок. Как избежать дублирования кода?
-                       // reportError(it)
+                        // Михаил а  как правильно организовать обработку ошибок, чтобы не дублировать код во всех фрагментах?
+                        TODO()
                     }
                 ))
-
-
     }
 
     private fun addShowsToList(movies: List<Movie>) {
@@ -107,10 +97,7 @@ class TvShowsFragment : Fragment() {
                 }
             }.toList()
         shows_recycler_view.adapter = adapter.apply { addAll(showList) }
-
     }
-
-
 
     private fun openShowDetails(movie: Movie) {
         val bundle = Bundle()

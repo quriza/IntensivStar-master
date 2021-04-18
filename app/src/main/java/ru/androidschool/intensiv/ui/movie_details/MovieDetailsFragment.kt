@@ -11,16 +11,10 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.internal.util.HalfSerializer.onNext
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.movie_details_fragment.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.Actor
 import ru.androidschool.intensiv.data.CreditsResponse
 import ru.androidschool.intensiv.data.Movie
 import ru.androidschool.intensiv.network.MovieApiClient
@@ -73,8 +67,7 @@ class MovieDetailsFragment : Fragment() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                         {
-                            setMovie(it);
-
+                            setMovie(it)
                         },
                         {
                             reportError(it)
@@ -86,8 +79,7 @@ class MovieDetailsFragment : Fragment() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                         {
-                            setCredits(it);
-
+                            setCredits(it)
                         },
                         {
                             reportError(it)
@@ -104,8 +96,7 @@ class MovieDetailsFragment : Fragment() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                         {
-                            setMovie(it);
-
+                            setMovie(it)
                         },
                         {
                             reportError(it)
@@ -122,15 +113,13 @@ class MovieDetailsFragment : Fragment() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                         {
-                            setCredits(it);
-
+                            setCredits(it)
                         },
                         {
                             reportError(it)
                         }
                     ))
         }
-
     }
 
     override fun onDestroy() {
@@ -155,11 +144,10 @@ class MovieDetailsFragment : Fragment() {
         movie_image.load(movie?.posterPath)
     }
 
-
     private fun setCredits(creditsResponse: CreditsResponse) {
         val actors = creditsResponse?.actors
         if (actors == null) {
-            return;
+            return
         }
         val actorList =
             actors.map {
@@ -169,7 +157,6 @@ class MovieDetailsFragment : Fragment() {
         actors_recycler_view.adapter = adapter.apply {
             addAll(actorList)
         }
-
     }
 
     companion object {
