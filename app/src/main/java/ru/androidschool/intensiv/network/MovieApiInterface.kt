@@ -1,5 +1,6 @@
 package ru.androidschool.intensiv.network
 
+import io.reactivex.rxjava3.core.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -15,19 +16,19 @@ interface MovieApiInterface {
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Call<MovieResponse>
+    ): Single<MovieResponse>
 
     @GET("movie/upcoming")
     fun getUpcomingMovies(
         @Query("api_key") apiKey: String,
         @Query("language") language: String
-    ): Call<MovieResponse>
+    ): Single<MovieResponse>
 
     @GET("movie/popular")
     fun getPopularMovies(
         @Query("api_key") apiKey: String,
         @Query("language") language: String
-    ): Call<MovieResponse>
+    ): Single<MovieResponse>
 
     @GET("movie/{movieId}")
     fun getMovieDetails(
@@ -35,7 +36,7 @@ interface MovieApiInterface {
         @Query("api_key") apiKey: String,
         @Query("language") language: String
 
-    ): Call<Movie>
+    ): Single<Movie>
 
     @GET("tv/{tvId}")
     fun getTVShowDetails(
@@ -43,7 +44,7 @@ interface MovieApiInterface {
         @Query("api_key") apiKey: String,
         @Query("language") language: String
 
-    ): Call<Movie>
+    ): Single<Movie>
 
     @GET("movie/{movieId}/credits")
     fun getMovieCredits(
@@ -51,13 +52,13 @@ interface MovieApiInterface {
         @Query("api_key") apiKey: String,
         @Query("language") language: String
 
-    ): Call<CreditsResponse>
+    ): Single<CreditsResponse>
 
     @GET("tv/popular")
     fun getTVPopular(
         @Query("api_key") apiKey: String,
         @Query("language") language: String
-    ): Call<MovieResponse>
+    ): Single<MovieResponse>
 
     @GET("tv/{tvId}/credits")
     fun getTVCredits(
@@ -65,5 +66,5 @@ interface MovieApiInterface {
         @Query("api_key") apiKey: String,
         @Query("language") language: String
 
-    ): Call<CreditsResponse>
+    ): Single<CreditsResponse>
 }

@@ -9,12 +9,18 @@ import androidx.fragment.app.Fragment
 
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.internal.util.HalfSerializer.onNext
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.movie_details_fragment.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.R
+import ru.androidschool.intensiv.data.Actor
 import ru.androidschool.intensiv.data.CreditsResponse
 import ru.androidschool.intensiv.data.Movie
 import ru.androidschool.intensiv.network.MovieApiClient
@@ -31,6 +37,7 @@ class MovieDetailsFragment : Fragment() {
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
     }
+    val compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,99 +60,116 @@ class MovieDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val movieId = requireArguments().getInt(FeedFragment.KEY_ID)
-        val getMovieDetails = if (requireArguments().getString(FeedFragment.KEY_TYPE) == "TV_SHOW") {
 
+        if (requireArguments().getString(FeedFragment.KEY_TYPE) == "TV_SHOW") {
+
+            compositeDisposable.add(
                 MovieApiClient.apiClient.getTVShowDetails(
                     movieId.toString(),
                     BuildConfig.API_KEY,
                     "ru"
                 )
-        } else {
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                        {
+                            setMovie(it);
 
+                        },
+                        {
+                            reportError(it)
+                        }
+                    ))
+            compositeDisposable.add(
+                MovieApiClient.apiClient.getTVCredits(movieId.toString(), BuildConfig.API_KEY, "ru")
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                        {
+                            setCredits(it);
+
+                        },
+                        {
+                            reportError(it)
+                        }
+                    ))
+        } else {
+            compositeDisposable.add(
                 MovieApiClient.apiClient.getMovieDetails(
                     movieId.toString(),
                     BuildConfig.API_KEY,
                     "ru"
                 )
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                        {
+                            setMovie(it);
+
+                        },
+                        {
+                            reportError(it)
+                        }
+                    ))
+
+            compositeDisposable.add(
+                MovieApiClient.apiClient.getMovieCredits(
+                    movieId.toString(),
+                    BuildConfig.API_KEY,
+                    "ru"
+                )
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                        {
+                            setCredits(it);
+
+                        },
+                        {
+                            reportError(it)
+                        }
+                    ))
         }
 
-        getMovieDetails.enqueue(object : Callback<Movie> {
-            override fun onFailure(call: Call<Movie>, e: Throwable) {
-                Log.e("getMovieDetails", e.toString())
-            }
+    }
 
-            override fun onResponse(call: Call<Movie>, response: Response<Movie>) {
-                val movie = response.body()
-                if (movie !== null) {
+    override fun onDestroy() {
+        compositeDisposable.clear()
+        super.onDestroy()
+    }
 
-                    title.text = movie?.title ?: ""
-                    movie_details_rating.rating = movie.rating
+    private fun reportError(err: Throwable) {
+        Log.d("Error occured", err.message ?: "")
+    }
 
-                    movie_genre.text =
-                        movie?.genres?.map({ it -> it.name })?.joinToString(", ") ?: ""
-                    movie_year.text = movie?.release_date?.substring(0, 4) ?: ""
-                    movie_produced_by.text =
-                        movie?.productionCompanies?.map({ it -> it.name })?.joinToString(", ") ?: ""
-                    movie_description.text = movie?.overview
-                    movie_image.load(movie?.posterPath)
-                }
-            }
-        })
+    private fun setMovie(movie: Movie) {
+        title.text = movie?.title ?: ""
+        movie_details_rating.rating = movie.rating
 
-        val getMovieCredits = if (requireArguments().getString(FeedFragment.KEY_TYPE) == "TV_SHOW") {
-            MovieApiClient.apiClient.getTVCredits(movieId.toString(), BuildConfig.API_KEY, "ru")
-        } else {
-            MovieApiClient.apiClient.getMovieCredits(movieId.toString(), BuildConfig.API_KEY, "ru")
+        movie_genre.text =
+            movie?.genres?.map({ it -> it.name })?.joinToString(", ") ?: ""
+        movie_year.text = movie?.release_date?.substring(0, 4) ?: ""
+        movie_produced_by.text =
+            movie?.productionCompanies?.map({ it -> it.name })?.joinToString(", ") ?: ""
+        movie_description.text = movie?.overview
+        movie_image.load(movie?.posterPath)
+    }
+
+
+    private fun setCredits(creditsResponse: CreditsResponse) {
+        val actors = creditsResponse?.actors
+        if (actors == null) {
+            return;
+        }
+        val actorList =
+            actors.map {
+                ActorItem(it)
+            }.toList()
+
+        actors_recycler_view.adapter = adapter.apply {
+            addAll(actorList)
         }
 
-        getMovieCredits.enqueue(object : Callback<CreditsResponse> {
-            override fun onFailure(call: Call<CreditsResponse>, e: Throwable) {
-                Log.e("getMovieCredits", e.toString())
-            }
-
-            override fun onResponse(
-                call: Call<CreditsResponse>,
-                response: Response<CreditsResponse>
-            ) {
-                val actors = response.body()?.actors
-                if (actors === null) {
-                    return
-                }
-                val actorList =
-                    actors.map {
-                        ActorItem(it)
-                    }.toList()
-                actors_recycler_view.adapter = adapter.apply {
-                    addAll(actorList)
-                }
-            }
-        })
-
-// getMovieDetails
-/*  val movie = MockRepository.getTVShows().find { it.title == movieTitle }
-
-actors_recycler_view.layoutManager =
-   LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-actors_recycler_view.adapter = adapter.apply { addAll(listOf()) }
-
-if (movie !== null) {
-   title.text = movie?.title ?: ""
-   movie_details_rating.rating = movie.rating
-/*   movie_genre.text = movie?.genre ?: ""
-   movie_year.text = movie?.year ?: ""
-   movie_produced_by.text = movie?.producedBy ?: ""
-   movie_description.text = movie?.description
-   movie_image.load(movie?.movieImage)
-
-   val actorList =
-       movie?.actors.map {
-           ActorItem(it)
-       }.toList()
-   actors_recycler_view.adapter = adapter.apply { addAll(actorList) }*/
-} else {
-   title.text = "не найден видосик"
-   // Михаил а как принято отрабатывать такую ситуацию?
-}*/
     }
 
     companion object {
