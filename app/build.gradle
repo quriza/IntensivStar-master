@@ -23,6 +23,9 @@ android {
 
         buildConfigField 'String', 'THE_MOVIE_DATABASE_API', keystoreProperties['THE_MOVIE_DATABASE_API']
         buildConfigField 'String', 'API_KEY', keystoreProperties['API_KEY']
+        buildConfigField 'String', 'BASE_URL', keystoreProperties['BASE_URL']
+        buildConfigField 'String', 'LANGUAGE',keystoreProperties['LANGUAGE']
+        buildConfigField 'String','IMAGE_PATH',keystoreProperties['IMAGE_PATH']
     }
     buildTypes {
         release {
@@ -43,6 +46,9 @@ android {
     androidExtensions {
         experimental = true
     }
+
+
+
 }
 
 dependencies {
@@ -66,11 +72,11 @@ dependencies {
 
     //networks
 
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.7.2'
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-scalars:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofit_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
 
 
     // Testing

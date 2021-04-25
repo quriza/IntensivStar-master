@@ -59,9 +59,7 @@ class MovieDetailsFragment : Fragment() {
 
             compositeDisposable.add(
                 MovieApiClient.apiClient.getTVShowDetails(
-                    movieId.toString(),
-                    BuildConfig.API_KEY,
-                    "ru"
+                    movieId.toString()
                 )
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -88,9 +86,8 @@ class MovieDetailsFragment : Fragment() {
         } else {
             compositeDisposable.add(
                 MovieApiClient.apiClient.getMovieDetails(
-                    movieId.toString(),
-                    BuildConfig.API_KEY,
-                    "ru"
+                    movieId.toString()
+
                 )
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
