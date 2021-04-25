@@ -4,6 +4,8 @@
     <string name="search_hint">Введите название</string>
 
     <string name="main_title">Что будете смотреть\nсегодня?</string>
+    <string name="now_playing">В прокате</string>
+
     <string name="recommended">Рекомендуем</string>
     <string name="popular">Популярные</string>
     <string name="upcoming">Новинки</string>
@@ -26,4 +28,10 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="placeholder">Пёс Киноман</string>
+
+    <string name="movie_produced_by">Студия</string>
+    <string name="movie_year">Год</string>
+    <string name="movie_genre">Жанр</string>
+    <string name="movie_watch">Смотреть</string>
+
 </resources>

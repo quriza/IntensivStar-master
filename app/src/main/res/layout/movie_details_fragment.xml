@@ -1,12 +1,168 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ru.androidschool.intensiv.ui.movie_details.MovieDetailsFragment">
+    android:background="@color/blueDark"
+    android:orientation="vertical"
+    android:paddingBottom="10dp">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:background="@color/blueDark"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/movie_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSizeBottom10Percent"
+            tools:src="@drawable/ic_avatar" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/blueDark"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingTop="40dp"
+            android:paddingRight="10dp"
+            tools:ignore="RtlHardcoded">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_gravity="top"
+                android:layout_marginBottom="@dimen/material_margin_normal"
+                android:gravity="left"
+                style="@style/Header"
+                tools:text="Aquaman"
+                tools:ignore="RtlHardcoded"/>
+
+            <Button
+                tools:ignore="RtlHardcoded"
+                android:id="@+id/start_button"
+                style="@style/GrayButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title"
+                android:layout_alignParentLeft="true"
+                android:text="@string/movie_watch" />
+
+            <androidx.appcompat.widget.AppCompatRatingBar
+                android:id="@+id/movie_details_rating"
+                style="@style/Base.Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title"
+                android:layout_alignParentRight="true"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:progressBackgroundTint="@color/colorControlNormal"
+                android:stepSize="0.5"
+                tools:rating="5"
+                tools:ignore="RtlHardcoded"/>
+
+            <TextView
+
+                android:id="@+id/movie_description"
+                style="@style/GrayText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/start_button"
+                android:layout_alignParentLeft="true"
+                android:layout_gravity="top"
+                android:layout_marginTop="@dimen/material_margin_normal"
+                android:layout_marginBottom="@dimen/material_margin_normal"
+                android:gravity="start"
+                tools:ignore="RtlHardcoded"
+                tools:text="это текст про булки которые надо поесть.это текст про булки которые надо поесть. это текст про булки которые надо поесть. это текст про булки которые надо поесть. это текст про булки которые надо поесть. это текст про булки которые надо поесть.  " />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/actors_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/material_margin_normal"
+                android:layout_marginTop="@dimen/material_margin_normal"
+                android:layout_marginEnd="@dimen/material_margin_normal"
+                android:orientation="horizontal"
+                android:scrollbars="horizontal"
+                android:visibility="visible"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:ignore="RtlSymmetry"
+                tools:itemCount="4"
+                tools:listitem="@layout/actor_view" />
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/material_margin_large"
+            android:layout_marginRight="@dimen/material_margin_normal">
+
+                <TextView android:layout_alignParentTop="true"
+                    android:id="@+id/movie_produced_by_caption"
+                    style="@style/WhiteCaption"
+                    android:text="@string/movie_produced_by"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@id/movie_produced_by_caption"
+                    android:id="@+id/movie_produced_by"
+                    style="@style/GrayText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Miramax" />
+
+                <TextView
+                    android:id="@+id/movie_genre_caption"
+                    android:layout_below="@id/movie_produced_by"
+
+                    style="@style/WhiteCaption"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/movie_genre" />
+
+                <TextView
+                    android:id="@+id/movie_genre"
+                    android:layout_below="@id/movie_produced_by"
+                    android:layout_toEndOf="@id/movie_genre_caption"
+                    style="@style/GrayText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Детектив" />
+
+                <TextView
+                    android:id="@+id/movie_year_caption"
+                    android:layout_below="@id/movie_genre_caption"
+                    style="@style/WhiteCaption"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/movie_year" />
+
+                <TextView
+                    android:id="@+id/movie_year"
+                    android:layout_below="@id/movie_genre_caption"
+                    android:layout_toEndOf="@id/movie_year_caption"
+                    style="@style/GrayText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="2021" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
