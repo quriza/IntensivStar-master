@@ -71,7 +71,7 @@ class TvShowsFragment : Fragment() {
         shows_recycler_view.adapter = adapter.apply { addAll(listOf()) }
 
         val getTVPopular =
-            MovieApiClient.apiClient.getTVPopular(BuildConfig.API_KEY, "ru")
+            MovieApiClient.apiClient.getTVPopular()
 
         getTVPopular.enqueue(object : Callback<MovieResponse> {
             override fun onFailure(call: Call<MovieResponse>, e: Throwable) {

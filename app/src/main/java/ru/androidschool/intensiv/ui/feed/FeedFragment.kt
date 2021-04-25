@@ -66,11 +66,11 @@ class FeedFragment : Fragment() {
         }
 
         val getNowPlayingMovies =
-            MovieApiClient.apiClient.getNowPlayingMovies(BuildConfig.API_KEY, "ru", 2)
+            MovieApiClient.apiClient.getNowPlayingMovies(page = 2)
         this.addResponseHandlers(getNowPlayingMovies, R.string.now_playing)
 
         val getUpcomingMovies =
-            MovieApiClient.apiClient.getUpcomingMovies(BuildConfig.API_KEY, "ru")
+            MovieApiClient.apiClient.getUpcomingMovies()
 
         this.addResponseHandlers(getUpcomingMovies, R.string.upcoming)
     }

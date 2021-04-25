@@ -1,6 +1,7 @@
 package ru.androidschool.intensiv.data
 
 import com.google.gson.annotations.SerializedName
+import ru.androidschool.intensiv.BuildConfig
 
 data class Movie(
     @SerializedName("adult")
@@ -37,7 +38,7 @@ data class Movie(
 ) {
     @SerializedName("poster_path")
     var posterPath: String? = null
-        get() = "https://image.tmdb.org/t/p/w500$field"
+        get() = BuildConfig.IMAGE_PATH+"$field"
 
     val rating: Float
         get() = (voteAverage ?: 0.0).div(2).toFloat()

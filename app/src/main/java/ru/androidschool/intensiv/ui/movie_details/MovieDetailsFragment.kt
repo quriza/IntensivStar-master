@@ -56,16 +56,13 @@ class MovieDetailsFragment : Fragment() {
         val getMovieDetails = if (requireArguments().getString(FeedFragment.KEY_TYPE) == "TV_SHOW") {
 
                 MovieApiClient.apiClient.getTVShowDetails(
-                    movieId.toString(),
-                    BuildConfig.API_KEY,
-                    "ru"
+                    movieId.toString()
                 )
         } else {
 
                 MovieApiClient.apiClient.getMovieDetails(
-                    movieId.toString(),
-                    BuildConfig.API_KEY,
-                    "ru"
+                    movieId.toString()
+
                 )
         }
 
@@ -93,9 +90,9 @@ class MovieDetailsFragment : Fragment() {
         })
 
         val getMovieCredits = if (requireArguments().getString(FeedFragment.KEY_TYPE) == "TV_SHOW") {
-            MovieApiClient.apiClient.getTVCredits(movieId.toString(), BuildConfig.API_KEY, "ru")
+            MovieApiClient.apiClient.getTVCredits(movieId.toString())
         } else {
-            MovieApiClient.apiClient.getMovieCredits(movieId.toString(), BuildConfig.API_KEY, "ru")
+            MovieApiClient.apiClient.getMovieCredits(movieId.toString())
         }
 
         getMovieCredits.enqueue(object : Callback<CreditsResponse> {

@@ -47,4 +47,8 @@ ext {
     timberVersion = '4.7.1'
 
     groupieVersion = '2.8.0'
+
+    retrofitVersion='2.9.0'
+    okhttpVersion='4.7.2'
 }
+
