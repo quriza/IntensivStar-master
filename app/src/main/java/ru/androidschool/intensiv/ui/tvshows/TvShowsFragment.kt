@@ -17,7 +17,6 @@ import kotlinx.android.synthetic.main.feed_fragment.*
 import kotlinx.android.synthetic.main.feed_header.*
 import kotlinx.android.synthetic.main.search_toolbar.view.*
 import kotlinx.android.synthetic.main.tv_shows_fragment.*
-import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.Movie
 import ru.androidschool.intensiv.network.MovieApiClient
@@ -71,10 +70,7 @@ class TvShowsFragment : Fragment() {
         shows_recycler_view.adapter = adapter.apply { addAll(listOf()) }
 
         compositeDisposable.add(
-            MovieApiClient.apiClient.getTVPopular(
-                BuildConfig.API_KEY, "ru"
-            )
-                .subscribeOn(Schedulers.io())
+            MovieApiClient.apiClient.getTVPopular().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {

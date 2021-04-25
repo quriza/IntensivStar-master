@@ -85,9 +85,7 @@ class FeedFragment : Fragment() {
                 ))
 
         compositeDisposable.add(
-            MovieApiClient.apiClient.getUpcomingMovies(
-                BuildConfig.API_KEY, "ru"
-            )
+            MovieApiClient.apiClient.getUpcomingMovies()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

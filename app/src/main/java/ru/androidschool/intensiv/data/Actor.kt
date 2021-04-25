@@ -10,5 +10,5 @@ data class Actor(
 
     @SerializedName("profile_path")
     var profilePath: String? = null
-        get() = BuildConfig.IMAGE_PATH+"$field"
+        get() = BuildConfig.IMAGE_PATH + "$field"
 }
