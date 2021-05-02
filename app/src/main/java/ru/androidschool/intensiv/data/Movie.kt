@@ -38,7 +38,7 @@ data class Movie(
 ) {
     @SerializedName("poster_path")
     var posterPath: String? = null
-        get() = BuildConfig.IMAGE_PATH+"$field"
+        get() = BuildConfig.IMAGE_PATH + "$field"
 
     val rating: Float
         get() = (voteAverage ?: 0.0).div(2).toFloat()

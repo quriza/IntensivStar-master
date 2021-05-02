@@ -1,7 +1,6 @@
 package ru.androidschool.intensiv.ui.tvshows
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,18 +10,17 @@ import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.feed_fragment.*
 import kotlinx.android.synthetic.main.feed_header.*
 import kotlinx.android.synthetic.main.search_toolbar.view.*
 import kotlinx.android.synthetic.main.tv_shows_fragment.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.Movie
-import ru.androidschool.intensiv.data.MovieResponse
 import ru.androidschool.intensiv.network.MovieApiClient
+import ru.androidschool.intensiv.network.applySchedulers
 import ru.androidschool.intensiv.ui.feed.FeedFragment
 
 private const val ARG_PARAM1 = "param1"
@@ -32,6 +30,8 @@ class TvShowsFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    val compositeDisposable = CompositeDisposable()
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
@@ -70,35 +70,36 @@ class TvShowsFragment : Fragment() {
         shows_recycler_view.layoutManager = LinearLayoutManager(context)
         shows_recycler_view.adapter = adapter.apply { addAll(listOf()) }
 
-        val getTVPopular =
+        compositeDisposable.add(
             MovieApiClient.apiClient.getTVPopular()
+                .applySchedulers()
+                .subscribe(
+                    {
+                        addShowsToList(it?.results ?: listOf())
+                    },
+                    {
+                        // Михаил а  как правильно организовать обработку ошибок, чтобы не дублировать код во всех фрагментах?
+                        TODO()
+                    }
+                ))
+    }
 
-        getTVPopular.enqueue(object : Callback<MovieResponse> {
-            override fun onFailure(call: Call<MovieResponse>, e: Throwable) {
-                Log.e("getTVPopular", e.toString())
-            }
-
-            override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
-                val movies = response.body()?.results ?: listOf()
-
-                val showList =
-                    movies.map {
-                        TvShowItem(it) { movie ->
-                            openShowDetails(
-                                movie
-                            )
-                        }
-                    }.toList()
-                shows_recycler_view.adapter = adapter.apply { addAll(showList) }
-                    // AddMoviesToFeed(R.string.upcoming, movies);
-            }
-        })
+    private fun addShowsToList(movies: List<Movie>) {
+        val showList =
+            movies.map {
+                TvShowItem(it) { movie ->
+                    openShowDetails(
+                        movie
+                    )
+                }
+            }.toList()
+        shows_recycler_view.adapter = adapter.apply { addAll(showList) }
     }
 
     private fun openShowDetails(movie: Movie) {
         val bundle = Bundle()
         bundle.putInt(FeedFragment.KEY_ID, movie.id ?: 0)
-        bundle.putString(FeedFragment.KEY_TYPE, "TV_SHOW")
+        bundle.putString(FeedFragment.KEY_TYPE, FeedFragment.KEY_TYPE_TV_SHOW)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)
     }
 
@@ -111,5 +112,10 @@ class TvShowsFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onDestroy() {
+        compositeDisposable.clear()
+        super.onDestroy()
     }
 }

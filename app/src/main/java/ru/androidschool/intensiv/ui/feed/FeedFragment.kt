@@ -13,21 +13,22 @@ import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.feed_fragment.*
 import kotlinx.android.synthetic.main.feed_header.*
 import kotlinx.android.synthetic.main.search_toolbar.view.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.Movie
-import ru.androidschool.intensiv.data.MovieResponse
 import ru.androidschool.intensiv.network.MovieApiClient
+import ru.androidschool.intensiv.network.applySchedulers
 import ru.androidschool.intensiv.ui.afterTextChanged
 import timber.log.Timber
 
 class FeedFragment : Fragment() {
+    val compositeDisposable = CompositeDisposable()
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
@@ -51,6 +52,11 @@ class FeedFragment : Fragment() {
         return inflater.inflate(R.layout.feed_fragment, container, false)
     }
 
+    override fun onDestroy() {
+        compositeDisposable.clear()
+        super.onDestroy()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -65,27 +71,33 @@ class FeedFragment : Fragment() {
             }
         }
 
-        val getNowPlayingMovies =
-            MovieApiClient.apiClient.getNowPlayingMovies(page = 2)
-        this.addResponseHandlers(getNowPlayingMovies, R.string.now_playing)
+        compositeDisposable.add(
+            MovieApiClient.apiClient.getNowPlayingMovies()
+                .applySchedulers()
+                .subscribe(
+                    {
+                        AddMoviesToFeed(R.string.now_playing, it?.results ?: listOf())
+                    },
+                    {
+                        reportError(it)
+                    }
+                ))
 
-        val getUpcomingMovies =
+        compositeDisposable.add(
             MovieApiClient.apiClient.getUpcomingMovies()
-
-        this.addResponseHandlers(getUpcomingMovies, R.string.upcoming)
+                .applySchedulers()
+                .subscribe(
+                    {
+                        AddMoviesToFeed(R.string.upcoming, it?.results ?: listOf())
+                    },
+                    {
+                        reportError(it)
+                    }
+                ))
     }
 
-    private fun addResponseHandlers(getMoviesCall: Call<MovieResponse>, strRes: Int) {
-        getMoviesCall.enqueue(object : Callback<MovieResponse> {
-            override fun onFailure(call: Call<MovieResponse>, e: Throwable) {
-                Log.e(getString(strRes), e.toString())
-            }
-
-            override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
-                val movies = response.body()?.results ?: listOf()
-                AddMoviesToFeed(strRes, movies)
-            }
-        })
+    private fun reportError(err: Throwable) {
+        Timber.e("Error occured", err.message ?: "")
     }
 
     private fun AddMoviesToFeed(titleRes: Int, movies: List<Movie>) {
@@ -131,5 +143,6 @@ class FeedFragment : Fragment() {
         const val KEY_SEARCH = "search"
         const val KEY_ID = "id"
         const val KEY_TYPE = "type"
+        const val KEY_TYPE_TV_SHOW = "TV_SHOW"
     }
 }
