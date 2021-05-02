@@ -23,8 +23,10 @@ import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.Movie
 import ru.androidschool.intensiv.network.MovieApiClient
+import ru.androidschool.intensiv.network.applySchedulers
 import ru.androidschool.intensiv.ui.afterTextChanged
 import timber.log.Timber
+
 class FeedFragment : Fragment() {
     val compositeDisposable = CompositeDisposable()
 
@@ -70,11 +72,8 @@ class FeedFragment : Fragment() {
         }
 
         compositeDisposable.add(
-            MovieApiClient.apiClient.getNowPlayingMovies(
-                BuildConfig.API_KEY, "ru", 2
-            )
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+            MovieApiClient.apiClient.getNowPlayingMovies()
+                .applySchedulers()
                 .subscribe(
                     {
                         AddMoviesToFeed(R.string.now_playing, it?.results ?: listOf())
@@ -86,8 +85,7 @@ class FeedFragment : Fragment() {
 
         compositeDisposable.add(
             MovieApiClient.apiClient.getUpcomingMovies()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .applySchedulers()
                 .subscribe(
                     {
                         AddMoviesToFeed(R.string.upcoming, it?.results ?: listOf())
@@ -99,7 +97,7 @@ class FeedFragment : Fragment() {
     }
 
     private fun reportError(err: Throwable) {
-        Log.d("Error occured", err.message ?: "")
+        Timber.e("Error occured", err.message ?: "")
     }
 
     private fun AddMoviesToFeed(titleRes: Int, movies: List<Movie>) {
@@ -145,5 +143,6 @@ class FeedFragment : Fragment() {
         const val KEY_SEARCH = "search"
         const val KEY_ID = "id"
         const val KEY_TYPE = "type"
+        const val KEY_TYPE_TV_SHOW = "TV_SHOW"
     }
 }

@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.tv_shows_fragment.*
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.Movie
 import ru.androidschool.intensiv.network.MovieApiClient
+import ru.androidschool.intensiv.network.applySchedulers
 import ru.androidschool.intensiv.ui.feed.FeedFragment
 
 private const val ARG_PARAM1 = "param1"
@@ -70,8 +71,8 @@ class TvShowsFragment : Fragment() {
         shows_recycler_view.adapter = adapter.apply { addAll(listOf()) }
 
         compositeDisposable.add(
-            MovieApiClient.apiClient.getTVPopular().subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+            MovieApiClient.apiClient.getTVPopular()
+                .applySchedulers()
                 .subscribe(
                     {
                         addShowsToList(it?.results ?: listOf())
@@ -98,7 +99,7 @@ class TvShowsFragment : Fragment() {
     private fun openShowDetails(movie: Movie) {
         val bundle = Bundle()
         bundle.putInt(FeedFragment.KEY_ID, movie.id ?: 0)
-        bundle.putString(FeedFragment.KEY_TYPE, "TV_SHOW")
+        bundle.putString(FeedFragment.KEY_TYPE, FeedFragment.KEY_TYPE_TV_SHOW)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)
     }
 

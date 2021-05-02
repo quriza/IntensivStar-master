@@ -15,7 +15,7 @@ interface MovieApiInterface {
     fun getNowPlayingMovies(
         @Query("api_key") apiKey: String = BuildConfig.API_KEY,
         @Query("language") language: String = BuildConfig.LANGUAGE,
-        @Query("page") page: Int
+        @Query("page") page: Int = 2 // Михаил, здесь магическая страница номер 2 добавлена для удобства проверки (Потому что результаты выдачи одинаковые на разных запросах к MovieDB) в реальном проекте понятно что такого бы не было
     ): Single<MovieResponse>
 
     @GET("movie/upcoming")

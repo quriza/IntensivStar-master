@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -18,8 +17,10 @@ import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.CreditsResponse
 import ru.androidschool.intensiv.data.Movie
 import ru.androidschool.intensiv.network.MovieApiClient
+import ru.androidschool.intensiv.network.applySchedulers
 import ru.androidschool.intensiv.ui.feed.FeedFragment
 import ru.androidschool.intensiv.ui.load
+import timber.log.Timber
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -55,14 +56,13 @@ class MovieDetailsFragment : Fragment() {
 
         val movieId = requireArguments().getInt(FeedFragment.KEY_ID)
 
-        if (requireArguments().getString(FeedFragment.KEY_TYPE) == "TV_SHOW") {
+        if (requireArguments().getString(FeedFragment.KEY_TYPE) == FeedFragment.KEY_TYPE_TV_SHOW) {
 
             compositeDisposable.add(
                 MovieApiClient.apiClient.getTVShowDetails(
                     movieId.toString()
                 )
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .applySchedulers()
                     .subscribe(
                         {
                             setMovie(it)
@@ -72,9 +72,8 @@ class MovieDetailsFragment : Fragment() {
                         }
                     ))
             compositeDisposable.add(
-                MovieApiClient.apiClient.getTVCredits(movieId.toString(), BuildConfig.API_KEY, "ru")
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                MovieApiClient.apiClient.getTVCredits(movieId.toString())
+                    .applySchedulers()
                     .subscribe(
                         {
                             setCredits(it)
@@ -89,8 +88,7 @@ class MovieDetailsFragment : Fragment() {
                     movieId.toString()
 
                 )
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .applySchedulers()
                     .subscribe(
                         {
                             setMovie(it)
@@ -102,12 +100,8 @@ class MovieDetailsFragment : Fragment() {
 
             compositeDisposable.add(
                 MovieApiClient.apiClient.getMovieCredits(
-                    movieId.toString(),
-                    BuildConfig.API_KEY,
-                    "ru"
-                )
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    movieId.toString()
+                ).applySchedulers()
                     .subscribe(
                         {
                             setCredits(it)
@@ -125,7 +119,7 @@ class MovieDetailsFragment : Fragment() {
     }
 
     private fun reportError(err: Throwable) {
-        Log.d("Error occured", err.message ?: "")
+        Timber.e("Error occured" + err.message ?: "")
     }
 
     private fun setMovie(movie: Movie) {
@@ -134,7 +128,11 @@ class MovieDetailsFragment : Fragment() {
 
         movie_genre.text =
             movie?.genres?.map({ it -> it.name })?.joinToString(", ") ?: ""
-        movie_year.text = movie?.release_date?.substring(0, 4) ?: ""
+        if ((movie?.release_date?.length ?: 0) >= 4) {
+            movie_year.text = movie?.release_date?.substring(0, 4) ?: ""
+        } else {
+            movie_year.text = "";
+        }
         movie_produced_by.text =
             movie?.productionCompanies?.map({ it -> it.name })?.joinToString(", ") ?: ""
         movie_description.text = movie?.overview
