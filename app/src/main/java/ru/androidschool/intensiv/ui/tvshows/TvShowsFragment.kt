@@ -73,12 +73,18 @@ class TvShowsFragment : Fragment() {
         compositeDisposable.add(
             MovieApiClient.apiClient.getTVPopular()
                 .applySchedulers()
+                .doOnSubscribe {
+                    tvShowsProgressBar.visibility = View.VISIBLE;
+                }
+                .doFinally {
+                    tvShowsProgressBar.visibility = View.GONE
+                }
                 .subscribe(
                     {
                         addShowsToList(it?.results ?: listOf())
                     },
                     {
-                        // Михаил а  как правильно организовать обработку ошибок, чтобы не дублировать код во всех фрагментах?
+
                         TODO()
                     }
                 ))
