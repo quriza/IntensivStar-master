@@ -68,4 +68,12 @@ interface MovieApiInterface {
         @Query("language") language: String = BuildConfig.LANGUAGE
 
     ): Single<CreditsResponse>
+
+    @GET("search/movie")
+    fun searchMovies(
+        @Query("query") query: String,
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
+        @Query("language") language: String = BuildConfig.LANGUAGE
+
+    ): Observable<MovieResponse>
 }

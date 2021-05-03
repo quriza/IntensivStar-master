@@ -1,7 +1,6 @@
 package ru.androidschool.intensiv.ui.feed
 
 import android.os.Bundle
-import android.service.autofill.Validators
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -25,7 +24,6 @@ import ru.androidschool.intensiv.network.MovieApiClient
 import ru.androidschool.intensiv.ui.afterTextChanged
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
-
 
 class FeedFragment : Fragment() {
     val compositeDisposable = CompositeDisposable()
@@ -64,29 +62,20 @@ class FeedFragment : Fragment() {
         movies_recycler_view.layoutManager = LinearLayoutManager(context)
         movies_recycler_view.adapter = adapter.apply { clear() }
 
-
-
+        // здесь делаем подписку через observable
         compositeDisposable.add(
             this.createSearchTextChangedObservable()
+
+                .map { s -> s.trim() }
+                .filter { s -> (s.length >= MIN_LENGTH) }
                 .debounce(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    val s=it.toString().replace(" ","")
-                    if (s.length > MIN_LENGTH) {
-                       // Timber.e(it)
-                        openSearch(it.toString())
-                    }
-                },{
+                    openSearch(it.toString())
+                }, {
                     Timber.e(it)
                 })
         )
-
-       /* search_toolbar.search_edit_text.afterTextChanged {
-            Timber.d(it.toString())
-            if (it.toString().length > MIN_LENGTH) {
-                openSearch(it.toString())
-            }
-        }*/
 
         compositeDisposable.add(
             Observable.zip(
@@ -98,7 +87,7 @@ class FeedFragment : Fragment() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
-                    progressBar.visibility = View.VISIBLE;
+                    progressBar.visibility = View.VISIBLE
                 }
                 .doFinally {
                     progressBar.visibility = View.GONE
@@ -112,7 +101,6 @@ class FeedFragment : Fragment() {
                         reportError(it)
                     }
                 ))
-
     }
 
     private fun createSearchTextChangedObservable(): Observable<String> {
@@ -124,11 +112,9 @@ class FeedFragment : Fragment() {
         }
     }
 
-
     private fun reportError(err: Throwable) {
         Timber.e("Error occured " + (err.message ?: ""))
     }
-
 
     private fun AddMoviesToFeed(titleRes: Int, movies: List<Movie>) {
         val moviesList = listOf(
@@ -174,5 +160,6 @@ class FeedFragment : Fragment() {
         const val KEY_ID = "id"
         const val KEY_TYPE = "type"
         const val KEY_TYPE_TV_SHOW = "TV_SHOW"
+        const val KEY_TYPE_MOVIE = "MOVIE"
     }
 }

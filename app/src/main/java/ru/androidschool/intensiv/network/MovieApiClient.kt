@@ -10,10 +10,10 @@ import ru.androidschool.intensiv.BuildConfig
 object MovieApiClient {
     @JvmStatic
     private var client: OkHttpClient = if (BuildConfig.DEBUG) {
-            OkHttpClient.Builder().addInterceptor(HttpLoggingInterceptor().apply {
+        OkHttpClient.Builder().addInterceptor(HttpLoggingInterceptor().apply {
             this.level = HttpLoggingInterceptor.Level.BODY
         }).build()
-     } else {
+    } else {
         OkHttpClient.Builder().build()
     }
 
