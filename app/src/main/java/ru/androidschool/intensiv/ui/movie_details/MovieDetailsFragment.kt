@@ -8,7 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.room.Room
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.movie_details_fragment.*
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.CreditsResponse
@@ -108,18 +112,30 @@ class MovieDetailsFragment : Fragment() {
 
 
     fun onLikeClicked() {
-        val db = MovieDatabase.get(this.requireContext())
-        val dao = db.movieDao()
-        val movieDB =
-            MovieDB(movie!!.id!!, movie!!.title!!, movie!!.posterPath, movie!!.popularity!!)
-        dao.save(movieDB)
 
-        val listKey = "liked"
-        val mList = MList(listKey, "Любимые фильмы")
-        dao.save(mList)
 
-        val movieMListCrossRef = MovieMListCrossRef(listKey, movie!!.id!!)
-        dao.save(movieMListCrossRef)
+        Completable.fromAction({
+            val db = MovieDatabase.get(this.requireContext())
+            val dao = db.movieDao()
+
+            val movieDB =
+                MovieDB(movie!!.id!!, movie!!.title!!, movie!!.posterPath, movie!!.popularity!!)
+            dao.save(movieDB)
+
+            val listKey = "liked"
+            val mList = MList(listKey, "Любимые фильмы")
+            dao.save(mList)
+
+            val movieMListCrossRef = MovieMListCrossRef(listKey, movie!!.id!!)
+            dao.save(movieMListCrossRef)
+        }).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                Timber.e("liked")
+                    //здесь можно например поменять цвет у кнопки
+            })
+
+
     }
 
     override fun onDestroy() {
