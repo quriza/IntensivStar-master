@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.room.Room
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -12,31 +13,25 @@ import kotlinx.android.synthetic.main.movie_details_fragment.*
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.CreditsResponse
 import ru.androidschool.intensiv.data.Movie
+import ru.androidschool.intensiv.db.MList
+import ru.androidschool.intensiv.db.MovieDB
+import ru.androidschool.intensiv.db.MovieDatabase
+import ru.androidschool.intensiv.db.MovieMListCrossRef
 import ru.androidschool.intensiv.network.MovieApiClient
 import ru.androidschool.intensiv.network.applySchedulers
 import ru.androidschool.intensiv.ui.feed.FeedFragment
 import ru.androidschool.intensiv.ui.load
 import timber.log.Timber
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 class MovieDetailsFragment : Fragment() {
 
-    private var param1: String? = null
-    private var param2: String? = null
+
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
     }
     val compositeDisposable = CompositeDisposable()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var movie: Movie? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,7 +44,9 @@ class MovieDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        like_button.setOnClickListener({
+            onLikeClicked()
+        })
         val movieId = requireArguments().getInt(FeedFragment.KEY_ID)
 
         if (requireArguments().getString(FeedFragment.KEY_TYPE) == FeedFragment.KEY_TYPE_TV_SHOW) {
@@ -109,6 +106,22 @@ class MovieDetailsFragment : Fragment() {
         }
     }
 
+
+    fun onLikeClicked() {
+        val db = MovieDatabase.get(this.requireContext())
+        val dao = db.movieDao()
+        val movieDB =
+            MovieDB(movie!!.id!!, movie!!.title!!, movie!!.posterPath, movie!!.popularity!!)
+        dao.save(movieDB)
+
+        val listKey = "liked"
+        val mList = MList(listKey, "Любимые фильмы")
+        dao.save(mList)
+
+        val movieMListCrossRef = MovieMListCrossRef(listKey, movie!!.id!!)
+        dao.save(movieMListCrossRef)
+    }
+
     override fun onDestroy() {
         compositeDisposable.clear()
         super.onDestroy()
@@ -119,6 +132,7 @@ class MovieDetailsFragment : Fragment() {
     }
 
     private fun setMovie(movie: Movie) {
+        this.movie = movie
         title.text = movie?.title ?: ""
         movie_details_rating.rating = movie.rating
 
@@ -156,8 +170,7 @@ class MovieDetailsFragment : Fragment() {
         fun newInstance(param1: String, param2: String) =
             MovieDetailsFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+
                 }
             }
     }
