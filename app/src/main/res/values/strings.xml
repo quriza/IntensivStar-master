@@ -37,6 +37,5 @@
     <string name="movie_year">Год</string>
     <string name="movie_genre">Жанр</string>
     <string name="movie_watch">Смотреть</string>
-    <string name="movie_like">Лайк</string>
 
 </resources>
