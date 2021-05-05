@@ -22,6 +22,5 @@ abstract class MovieDatabase : RoomDatabase() {
             }
             return instance!!
         }
-
     }
 }

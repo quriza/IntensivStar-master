@@ -7,7 +7,7 @@ data class MovieDB(
     @PrimaryKey
     val movieId: Int,
     val title: String,
-    val posterPath:String?,
+    val posterPath: String?,
     val popularity: Double?
 )
 

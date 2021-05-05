@@ -13,13 +13,11 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_watchlist.*
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.Movie
 import ru.androidschool.intensiv.db.MlistWithMovies
 import ru.androidschool.intensiv.db.MovieDatabase
-import ru.androidschool.intensiv.ui.movie_details.MovieDetailsFragment
 import ru.androidschool.intensiv.ui.profile.SharedViewModel
 import ru.androidschool.intensiv.ui.profile.TabData
 import timber.log.Timber
@@ -27,7 +25,6 @@ import timber.log.Timber
 private const val TAB_NUM = "tab_num"
 
 class WatchlistFragment : Fragment() {
-
 
     private var tabNum: Int = 0
     private val model: SharedViewModel by activityViewModels()
@@ -59,7 +56,6 @@ class WatchlistFragment : Fragment() {
         movies_recycler_view.layoutManager = GridLayoutManager(context, 4)
         movies_recycler_view.adapter = adapter.apply { addAll(listOf()) }
 
-
         val listKeys = resources.getStringArray(R.array.tab_keys)
         compositeDisposable.add(
             Observable.fromCallable({
@@ -74,8 +70,6 @@ class WatchlistFragment : Fragment() {
                     Timber.e(it.message)
                 })
         )
-
-
     }
 
     fun showLikedList(mlist: MlistWithMovies) {

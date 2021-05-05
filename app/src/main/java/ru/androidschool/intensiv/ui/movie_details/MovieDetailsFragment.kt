@@ -1,12 +1,10 @@
 package ru.androidschool.intensiv.ui.movie_details
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.room.Room
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -25,9 +23,7 @@ import ru.androidschool.intensiv.ui.feed.FeedFragment
 import ru.androidschool.intensiv.ui.load
 import timber.log.Timber
 
-
 class MovieDetailsFragment : Fragment() {
-
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
@@ -112,7 +108,7 @@ class MovieDetailsFragment : Fragment() {
 
     fun checkIfLiked() {
         if (movie == null) {
-            return;
+            return
         }
         compositeDisposable.add(Observable.fromCallable({
             val db = MovieDatabase.get(this.requireContext())
@@ -128,11 +124,10 @@ class MovieDetailsFragment : Fragment() {
             }))
     }
 
-
     fun onLikeClicked() {
 
         if (movie == null) {
-            return;
+            return
         }
 
         compositeDisposable.add(Completable.fromAction({
@@ -152,7 +147,6 @@ class MovieDetailsFragment : Fragment() {
             } else {
                 dao.deleteMovieFromList(LIKED_LIST_KEY, movie!!.id!!)
             }
-
         }).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -160,17 +154,14 @@ class MovieDetailsFragment : Fragment() {
             }, {
                 Timber.e(it.message)
             }))
-
-
     }
 
     fun showMovieAsLiked(isLiked: Boolean) {
         this.isLiked = isLiked
         if (isLiked) {
-            this.like_button.setBackgroundResource(R.drawable.ic_baseline_fav_yellow);
+            this.like_button.setBackgroundResource(R.drawable.ic_baseline_fav_yellow)
         } else {
-            this.like_button.setBackgroundResource(R.drawable.ic_baseline_fav_gray);
-
+            this.like_button.setBackgroundResource(R.drawable.ic_baseline_fav_gray)
         }
     }
 
@@ -225,7 +216,6 @@ class MovieDetailsFragment : Fragment() {
         fun newInstance(param1: String, param2: String) =
             MovieDetailsFragment().apply {
                 arguments = Bundle().apply {
-
                 }
             }
     }

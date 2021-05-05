@@ -33,7 +33,7 @@ data class Movie(
     @SerializedName("production_companies")
     var productionCompanies: List<ProductionCompany>? = listOf(),
     @SerializedName("genres")
-    var genres: List<Genre>? =listOf()
+    var genres: List<Genre>? = listOf()
 
 ) {
     @SerializedName("poster_path")
@@ -44,11 +44,8 @@ data class Movie(
         }
 
     val shortPosterPath: String?
-        get() = this.posterPath?.replace(BuildConfig.IMAGE_PATH,"")
+        get() = this.posterPath?.replace(BuildConfig.IMAGE_PATH, "")
 
     val rating: Float
         get() = (voteAverage ?: 0.0).div(2).toFloat()
-
-
-
 }

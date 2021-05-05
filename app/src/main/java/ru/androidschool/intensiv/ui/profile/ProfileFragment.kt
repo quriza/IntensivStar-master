@@ -19,7 +19,6 @@ import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.fragment_profile.*
 import ru.androidschool.intensiv.R
-import timber.log.Timber
 
 data class TabData(val count: Int, val position: Int)
 
@@ -29,7 +28,6 @@ class SharedViewModel : ViewModel() {
     fun updateTabData(item: TabData) {
         tabData.value = item
     }
-
 }
 
 class ProfileFragment : Fragment() {
@@ -40,11 +38,11 @@ class ProfileFragment : Fragment() {
     private var profilePageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
 
-              Toast.makeText(
-                   requireContext(),
-                   "Selected position: $position",
-                   Toast.LENGTH_SHORT
-               ).show()
+            Toast.makeText(
+                requireContext(),
+                "Selected position: $position",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -55,7 +53,6 @@ class ProfileFragment : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_profile, container, false)
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -75,7 +72,6 @@ class ProfileFragment : Fragment() {
             .placeholder(R.drawable.ic_avatar)
             .into(avatar)
 
-
         profileTabLayoutTitles = resources.getStringArray(R.array.tab_titles)
 
         val profileAdapter = ProfileAdapter(
@@ -85,8 +81,6 @@ class ProfileFragment : Fragment() {
         doppelgangerViewPager.adapter = profileAdapter
 
         doppelgangerViewPager.registerOnPageChangeCallback(profilePageChangeCallback)
-
-
 
         TabLayoutMediator(tabLayout, doppelgangerViewPager) { tab, position ->
             setTabText(tab, profileTabLayoutTitles[position], null)
@@ -100,5 +94,4 @@ class ProfileFragment : Fragment() {
 
         tab.text = spannableStringTitle
     }
-
 }
