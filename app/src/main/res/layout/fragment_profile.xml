@@ -76,6 +76,7 @@
             app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
             app:tabTextColor="@color/textColorGrey" />
 
+
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/doppelgangerViewPager"
             android:layout_width="match_parent"

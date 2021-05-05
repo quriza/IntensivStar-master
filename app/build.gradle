@@ -107,4 +107,5 @@ dependencies {
     implementation "androidx.room:room-ktx:$rootProject.room_version"
     androidTestImplementation "android.room:room-testing:$rootProject.room_version"
     implementation "androidx.room:room-rxjava2:$rootProject.room_version"
-}
+
+    }

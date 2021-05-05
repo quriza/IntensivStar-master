@@ -8,17 +8,26 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_watchlist.movies_recycler_view
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.MockRepository
+import ru.androidschool.intensiv.data.Movie
+import ru.androidschool.intensiv.db.MlistWithMovies
+import ru.androidschool.intensiv.db.MovieDatabase
+import ru.androidschool.intensiv.ui.movie_details.MovieDetailsFragment
+import timber.log.Timber
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val TAB_NUM = "tab_num"
 
 class WatchlistFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var tabNum: Int = 0
+
+    val compositeDisposable = CompositeDisposable()
 
     val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
@@ -27,8 +36,7 @@ class WatchlistFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            tabNum = it.getInt(TAB_NUM)
         }
     }
 
@@ -47,24 +55,48 @@ class WatchlistFragment : Fragment() {
         movies_recycler_view.layoutManager = GridLayoutManager(context, 4)
         movies_recycler_view.adapter = adapter.apply { addAll(listOf()) }
 
-        val moviesList =
-            MockRepository.getMovies().map {
-                MoviePreviewItem(
-                    it
-                ) { movie -> }
-            }.toList()
 
+
+        if (tabNum == 0) {
+            compositeDisposable.add(
+                Observable.fromCallable({
+                    val db = MovieDatabase.get(this.requireContext())
+                    db.movieDao().getOneMListWithMovie(MovieDetailsFragment.LIKED_LIST_KEY)
+                }).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        showLikedList(it)
+                    }, {
+                        Timber.e(it.message)
+                    })
+            )
+        }
+
+    }
+
+    fun showLikedList(mlist: MlistWithMovies) {
+        val moviesList = mlist.movies.map { item ->
+            val movie = Movie(id = item.movieId, title = item.title, voteAverage = item.popularity)
+            movie.posterPath = item.posterPath
+            MoviePreviewItem(
+                movie
+            ) { movie -> }
+        }.toList()
         movies_recycler_view.adapter = adapter.apply { addAll(moviesList) }
+    }
+
+    override fun onDestroy() {
+        compositeDisposable.clear()
+        super.onDestroy()
     }
 
     companion object {
 
         @JvmStatic
-        fun newInstance() =
+        fun newInstance(tabNum: Int) =
             WatchlistFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putInt(TAB_NUM, tabNum)
                 }
             }
     }

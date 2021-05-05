@@ -1,5 +1,6 @@
 package ru.androidschool.intensiv.ui.movie_details
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,10 +18,7 @@ import kotlinx.android.synthetic.main.movie_details_fragment.*
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.CreditsResponse
 import ru.androidschool.intensiv.data.Movie
-import ru.androidschool.intensiv.db.MList
-import ru.androidschool.intensiv.db.MovieDB
-import ru.androidschool.intensiv.db.MovieDatabase
-import ru.androidschool.intensiv.db.MovieMListCrossRef
+import ru.androidschool.intensiv.db.*
 import ru.androidschool.intensiv.network.MovieApiClient
 import ru.androidschool.intensiv.network.applySchedulers
 import ru.androidschool.intensiv.ui.feed.FeedFragment
@@ -36,6 +34,7 @@ class MovieDetailsFragment : Fragment() {
     }
     val compositeDisposable = CompositeDisposable()
     private var movie: Movie? = null
+    private var isLiked: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,6 +50,7 @@ class MovieDetailsFragment : Fragment() {
         like_button.setOnClickListener({
             onLikeClicked()
         })
+        checkIfLiked()
         val movieId = requireArguments().getInt(FeedFragment.KEY_ID)
 
         if (requireArguments().getString(FeedFragment.KEY_TYPE) == FeedFragment.KEY_TYPE_TV_SHOW) {
@@ -110,32 +110,68 @@ class MovieDetailsFragment : Fragment() {
         }
     }
 
+    fun checkIfLiked() {
+        if (movie == null) {
+            return;
+        }
+        compositeDisposable.add(Observable.fromCallable({
+            val db = MovieDatabase.get(this.requireContext())
+
+            db.movieDao().checkIfMovieInList(LIKED_LIST_KEY, movieId = movie!!.id!!)
+        }).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                showMovieAsLiked(true)
+                Timber.e("find it")
+            }, {
+                // его просто не лайкали
+            }))
+    }
+
 
     fun onLikeClicked() {
 
+        if (movie == null) {
+            return;
+        }
 
-        Completable.fromAction({
+        compositeDisposable.add(Completable.fromAction({
             val db = MovieDatabase.get(this.requireContext())
             val dao = db.movieDao()
 
             val movieDB =
-                MovieDB(movie!!.id!!, movie!!.title!!, movie!!.posterPath, movie!!.popularity!!)
+                MovieDB(movie!!.id!!, movie!!.title!!, movie!!.shortPosterPath, movie!!.voteAverage!!)
             dao.save(movieDB)
 
-            val listKey = "liked"
-            val mList = MList(listKey, "Любимые фильмы")
+            val mList = MList(LIKED_LIST_KEY, LIKED_LIST_NAME)
             dao.save(mList)
 
-            val movieMListCrossRef = MovieMListCrossRef(listKey, movie!!.id!!)
-            dao.save(movieMListCrossRef)
+            if (!isLiked) {
+                val movieMListCrossRef = MovieMListCrossRef(LIKED_LIST_KEY, movie!!.id!!)
+                dao.save(movieMListCrossRef)
+            } else {
+                dao.deleteMovieFromList(LIKED_LIST_KEY, movie!!.id!!)
+            }
+
         }).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Timber.e("liked")
-                    //здесь можно например поменять цвет у кнопки
-            })
+                showMovieAsLiked(!isLiked)
+            }, {
+                Timber.e(it.message)
+            }))
 
 
+    }
+
+    fun showMovieAsLiked(isLiked: Boolean) {
+        this.isLiked = isLiked
+        if (isLiked) {
+            this.like_button.setBackgroundResource(R.drawable.ic_baseline_fav_yellow);
+        } else {
+            this.like_button.setBackgroundResource(R.drawable.ic_baseline_fav_gray);
+
+        }
     }
 
     override fun onDestroy() {
@@ -163,6 +199,7 @@ class MovieDetailsFragment : Fragment() {
             movie?.productionCompanies?.map({ it -> it.name })?.joinToString(", ") ?: ""
         movie_description.text = movie?.overview
         movie_image.load(movie?.posterPath)
+        checkIfLiked()
     }
 
     private fun setCredits(creditsResponse: CreditsResponse) {
@@ -181,6 +218,8 @@ class MovieDetailsFragment : Fragment() {
     }
 
     companion object {
+        val LIKED_LIST_KEY: String = "liked"
+        val LIKED_LIST_NAME: String = "Любимые фильмы"
 
         @JvmStatic
         fun newInstance(param1: String, param2: String) =

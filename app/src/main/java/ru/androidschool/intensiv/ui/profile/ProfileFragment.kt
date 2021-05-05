@@ -61,7 +61,7 @@ class ProfileFragment : Fragment() {
             // Выделение первой части заголовка таба
             // Название таба
             val title = profileTabLayoutTitles[position]
-            // Раздеряем название на части. Первый элемент будет кол-во
+            // Разделяем название на части. Первый элемент будет кол-во
             val parts = profileTabLayoutTitles[position].split(" ")
             val number = parts[0]
             val spannableStringTitle = SpannableString(title)
