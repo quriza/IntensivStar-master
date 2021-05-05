@@ -1,18 +1,14 @@
 package ru.androidschool.intensiv.ui.movie_details
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.movie_details_fragment.*
-import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.CreditsResponse
 import ru.androidschool.intensiv.data.Movie
@@ -131,7 +127,7 @@ class MovieDetailsFragment : Fragment() {
         if ((movie?.release_date?.length ?: 0) >= 4) {
             movie_year.text = movie?.release_date?.substring(0, 4) ?: ""
         } else {
-            movie_year.text = "";
+            movie_year.text = ""
         }
         movie_produced_by.text =
             movie?.productionCompanies?.map({ it -> it.name })?.joinToString(", ") ?: ""

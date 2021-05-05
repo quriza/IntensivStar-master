@@ -10,12 +10,7 @@ import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.android.synthetic.main.feed_fragment.*
-import kotlinx.android.synthetic.main.feed_header.*
-import kotlinx.android.synthetic.main.search_toolbar.view.*
 import kotlinx.android.synthetic.main.tv_shows_fragment.*
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.Movie
@@ -73,12 +68,18 @@ class TvShowsFragment : Fragment() {
         compositeDisposable.add(
             MovieApiClient.apiClient.getTVPopular()
                 .applySchedulers()
+                .doOnSubscribe {
+                    tvShowsProgressBar.visibility = View.VISIBLE
+                }
+                .doFinally {
+                    tvShowsProgressBar.visibility = View.GONE
+                }
                 .subscribe(
                     {
                         addShowsToList(it?.results ?: listOf())
                     },
                     {
-                        // Михаил а  как правильно организовать обработку ошибок, чтобы не дублировать код во всех фрагментах?
+
                         TODO()
                     }
                 ))

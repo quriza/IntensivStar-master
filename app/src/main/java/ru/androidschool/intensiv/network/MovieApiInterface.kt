@@ -1,5 +1,6 @@
 package ru.androidschool.intensiv.network
 
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -16,13 +17,13 @@ interface MovieApiInterface {
         @Query("api_key") apiKey: String = BuildConfig.API_KEY,
         @Query("language") language: String = BuildConfig.LANGUAGE,
         @Query("page") page: Int = 2 // Михаил, здесь магическая страница номер 2 добавлена для удобства проверки (Потому что результаты выдачи одинаковые на разных запросах к MovieDB) в реальном проекте понятно что такого бы не было
-    ): Single<MovieResponse>
+    ): Observable<MovieResponse>
 
     @GET("movie/upcoming")
     fun getUpcomingMovies(
         @Query("api_key") apiKey: String = BuildConfig.API_KEY,
         @Query("language") language: String = BuildConfig.LANGUAGE
-    ): Single<MovieResponse>
+    ): Observable<MovieResponse>
 
     @GET("movie/popular")
     fun getPopularMovies(
@@ -67,4 +68,12 @@ interface MovieApiInterface {
         @Query("language") language: String = BuildConfig.LANGUAGE
 
     ): Single<CreditsResponse>
+
+    @GET("search/movie")
+    fun searchMovies(
+        @Query("query") query: String,
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
+        @Query("language") language: String = BuildConfig.LANGUAGE
+
+    ): Observable<MovieResponse>
 }
