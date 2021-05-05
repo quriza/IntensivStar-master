@@ -44,6 +44,14 @@
                 tools:ignore="RtlHardcoded"/>
 
             <Button
+                android:id="@+id/like_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/ic_baseline_fav_gray"
+                />
+
+            <Button
                 tools:ignore="RtlHardcoded"
                 android:id="@+id/start_button"
                 style="@style/GrayButton"
