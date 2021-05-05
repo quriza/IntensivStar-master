@@ -12,9 +12,10 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_watchlist.movies_recycler_view
+import io.reactivex.rxjava3.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.Subject
+import kotlinx.android.synthetic.main.fragment_watchlist.*
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.MockRepository
 import ru.androidschool.intensiv.data.Movie
 import ru.androidschool.intensiv.db.MlistWithMovies
 import ru.androidschool.intensiv.db.MovieDatabase
@@ -24,6 +25,9 @@ import timber.log.Timber
 private const val TAB_NUM = "tab_num"
 
 class WatchlistFragment : Fragment() {
+    var subjectCount: Subject<Int> = PublishSubject.create()
+
+
     // TODO: Rename and change types of parameters
     private var tabNum: Int = 0
 
@@ -82,6 +86,7 @@ class WatchlistFragment : Fragment() {
                 movie
             ) { movie -> }
         }.toList()
+        subjectCount.onNext(moviesList.count())
         movies_recycler_view.adapter = adapter.apply { addAll(moviesList) }
     }
 

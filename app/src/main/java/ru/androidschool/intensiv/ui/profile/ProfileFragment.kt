@@ -21,6 +21,8 @@ class ProfileFragment : Fragment() {
 
     private var profilePageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
+
+
             Toast.makeText(
                 requireContext(),
                 "Selected position: $position",
@@ -37,6 +39,7 @@ class ProfileFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -45,6 +48,7 @@ class ProfileFragment : Fragment() {
             .transform(CropCircleTransformation())
             .placeholder(R.drawable.ic_avatar)
             .into(avatar)
+
 
         profileTabLayoutTitles = resources.getStringArray(R.array.tab_titles)
 
@@ -55,6 +59,8 @@ class ProfileFragment : Fragment() {
         doppelgangerViewPager.adapter = profileAdapter
 
         doppelgangerViewPager.registerOnPageChangeCallback(profilePageChangeCallback)
+
+
 
         TabLayoutMediator(tabLayout, doppelgangerViewPager) { tab, position ->
 
